@@ -8,49 +8,241 @@
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
   :root {
-    --bg: #0f0f0f;
-    --surface: #1a1a1a;
-    --surface2: #242424;
-    --border: rgba(255,255,255,0.1);
-    --text: #f0f0f0;
-    --muted: #888;
-    --green: #22c55e;
-    --red: #ef4444;
-    --accent: #6366f1;
+    --bg: #008080;
+    --win: #c0c0c0;
+    --win-dark: #808080;
+    --win-darker: #404040;
+    --win-light: #ffffff;
+    --win-title: #000080;
+    --win-title-text: #ffffff;
+    --text: #000000;
+    --muted: #444444;
+    --green: #008000;
+    --red: #cc0000;
+    --accent: #000080;
+    --inset-bg: #ffffff;
   }
 
-  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overflow-x: hidden; }
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'MS Sans Serif', 'Pixelated MS Sans Serif', Arial, sans-serif;
+    font-size: 13px;
+    overflow: hidden;
+  }
 
-  #setup-screen { display: flex; flex-direction: column; height: 100vh; height: 100dvh; padding: 16px; gap: 12px; overflow: hidden; }
-  #tappe-list { overflow-y: auto; flex: 1 1 0; display: flex; flex-direction: column; gap: 12px; padding-bottom: 4px; }
-  .screen-title { font-size: 20px; font-weight: 600; text-align: center; padding: 8px 0 4px; letter-spacing: 0.5px; }
-  .screen-sub { font-size: 13px; color: var(--muted); text-align: center; margin-top: -4px; margin-bottom: 4px; }
+  /* ── Win98 raised border ── */
+  .win-raised {
+    border-top: 2px solid var(--win-light);
+    border-left: 2px solid var(--win-light);
+    border-right: 2px solid var(--win-darker);
+    border-bottom: 2px solid var(--win-darker);
+  }
+  .win-sunken {
+    border-top: 2px solid var(--win-darker);
+    border-left: 2px solid var(--win-darker);
+    border-right: 2px solid var(--win-light);
+    border-bottom: 2px solid var(--win-light);
+  }
+  .win-inset {
+    border-top: 1px solid var(--win-dark);
+    border-left: 1px solid var(--win-dark);
+    border-right: 1px solid var(--win-light);
+    border-bottom: 1px solid var(--win-light);
+  }
 
-  .tappa-row { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
-  .tappa-num { font-size: 13px; color: var(--muted); min-width: 24px; }
-  .tappa-name-input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; padding: 8px 10px; outline: none; min-width: 0; }
-  .tappa-name-input:focus { border-color: var(--accent); }
-  .time-input-wrap { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-  .time-num { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; padding: 8px 0; text-align: center; outline: none; }
-  .time-num:focus { border-color: var(--accent); }
-  .time-mm { width: 44px; }
-  .time-ss { width: 44px; }
-  .time-sep { color: var(--muted); font-size: 18px; font-weight: 700; }
-  .del-btn { background: none; border: none; color: var(--red); font-size: 20px; cursor: pointer; padding: 4px 6px; border-radius: 6px; line-height: 1; flex-shrink: 0; }
+  /* ── Window chrome ── */
+  .win-window {
+    background: var(--win);
+    padding: 3px;
+  }
+  .win-titlebar {
+    background: linear-gradient(to right, var(--win-title), #1084d0);
+    color: var(--win-title-text);
+    font-weight: bold;
+    font-size: 13px;
+    padding: 3px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3px;
+    user-select: none;
+  }
+  .win-titlebar-icon { font-size: 14px; margin-right: 4px; }
+  .win-titlebar-left { display: flex; align-items: center; }
 
-  .add-btn { background: var(--surface2); border: 1px dashed var(--border); border-radius: 12px; color: var(--accent); font-size: 15px; font-weight: 500; padding: 14px; cursor: pointer; text-align: center; width: 100%; }
-  .add-btn:active { opacity: 0.7; }
-  button, .add-btn, .start-btn, .tap-btn, .back-btn, .del-btn { touch-action: manipulation; }
-  .start-btn { background: var(--accent); border: none; border-radius: 14px; color: #fff; font-size: 18px; font-weight: 600; padding: 18px; cursor: pointer; width: 100%; margin-top: auto; letter-spacing: 0.3px; }
-  .start-btn:active { opacity: 0.85; transform: scale(0.99); }
+  /* ── Buttons ── */
+  button, .add-btn, .start-btn, .tap-btn, .back-btn, .del-btn, .win-btn {
+    touch-action: manipulation;
+    cursor: pointer;
+  }
+  .win-btn {
+    background: var(--win);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 4px 12px;
+    border-top: 2px solid var(--win-light);
+    border-left: 2px solid var(--win-light);
+    border-right: 2px solid var(--win-darker);
+    border-bottom: 2px solid var(--win-darker);
+    min-width: 75px;
+    text-align: center;
+  }
+  .win-btn:active {
+    border-top: 2px solid var(--win-darker);
+    border-left: 2px solid var(--win-darker);
+    border-right: 2px solid var(--win-light);
+    border-bottom: 2px solid var(--win-light);
+    padding: 5px 11px 3px 13px;
+  }
 
-  #race-screen { display: none; flex-direction: column; height: 100vh; height: 100dvh; overflow: hidden; }
+  /* ── Inputs ── */
+  input.win-input {
+    background: var(--inset-bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 3px 5px;
+    border-top: 2px solid var(--win-darker);
+    border-left: 2px solid var(--win-darker);
+    border-right: 2px solid var(--win-light);
+    border-bottom: 2px solid var(--win-light);
+    outline: none;
+  }
+  input.win-input:focus { outline: 1px dotted #000; outline-offset: -3px; }
 
-  .race-header { padding: 10px 16px 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
+  /* ══════ SETUP ══════ */
+  #setup-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; height: 100dvh;
+    padding: 10px;
+  }
+  .setup-window {
+    width: 100%;
+    max-width: 420px;
+    height: calc(100dvh - 20px);
+    display: flex;
+    flex-direction: column;
+  }
+  .setup-body {
+    flex: 1 1 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+  }
+  #tappe-list {
+    flex: 1 1 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .tappa-row {
+    background: var(--win);
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-top: 1px solid var(--win-light);
+    border-left: 1px solid var(--win-light);
+    border-right: 1px solid var(--win-dark);
+    border-bottom: 1px solid var(--win-dark);
+  }
+  .tappa-num { font-size: 12px; color: var(--muted); min-width: 22px; }
+  .tappa-name-input { flex: 1; min-width: 0; }
+  .time-input-wrap { display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
+  .time-mm, .time-ss { width: 38px; text-align: center; }
+  .time-sep { font-weight: bold; font-size: 15px; color: var(--muted); }
+  .del-btn {
+    background: var(--win);
+    color: var(--red);
+    font-size: 14px;
+    font-weight: bold;
+    padding: 1px 6px;
+    border-top: 2px solid var(--win-light);
+    border-left: 2px solid var(--win-light);
+    border-right: 2px solid var(--win-darker);
+    border-bottom: 2px solid var(--win-darker);
+    line-height: 1;
+    flex-shrink: 0;
+    border-radius: 0;
+  }
+  .setup-footer {
+    display: flex;
+    gap: 6px;
+    padding: 6px 8px 8px;
+    justify-content: flex-end;
+    border-top: 1px solid var(--win-dark);
+    flex-shrink: 0;
+  }
+  .add-btn {
+    background: var(--win);
+    color: var(--accent);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 4px 10px;
+    border-top: 2px solid var(--win-light);
+    border-left: 2px solid var(--win-light);
+    border-right: 2px solid var(--win-darker);
+    border-bottom: 2px solid var(--win-darker);
+  }
+  .start-btn {
+    background: var(--win);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 4px 18px;
+    border-top: 2px solid var(--win-light);
+    border-left: 2px solid var(--win-light);
+    border-right: 2px solid var(--win-darker);
+    border-bottom: 2px solid var(--win-darker);
+  }
+  .start-btn:active, .add-btn:active {
+    border-top: 2px solid var(--win-darker);
+    border-left: 2px solid var(--win-darker);
+    border-right: 2px solid var(--win-light);
+    border-bottom: 2px solid var(--win-light);
+  }
+
+  /* ══════ RACE ══════ */
+  #race-screen {
+    display: none;
+    flex-direction: column;
+    height: 100vh; height: 100dvh;
+    background: var(--bg);
+    padding: 6px;
+    gap: 5px;
+    overflow: hidden;
+  }
+
+  .race-window {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--win);
+  }
+
+  .race-header {
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--win);
+    flex-shrink: 0;
+    border-bottom: 2px solid var(--win-dark);
+  }
   .race-header-left { display: flex; flex-direction: column; }
-  .race-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
-  .race-tappa-name { font-size: 16px; font-weight: 600; }
-  .race-progress { font-size: 13px; color: var(--muted); }
+  .race-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .race-tappa-name { font-size: 15px; font-weight: bold; color: var(--accent); }
+  .race-progress { font-size: 12px; color: var(--muted); }
 
   .timer-area {
     flex: 1 1 0;
@@ -62,9 +254,14 @@
     gap: 4px;
     cursor: pointer;
     user-select: none;
-    background: var(--bg);
+    background: var(--inset-bg);
     overflow: hidden;
     padding: 8px 12px;
+    border-top: 2px solid var(--win-darker);
+    border-left: 2px solid var(--win-darker);
+    border-right: 2px solid var(--win-light);
+    border-bottom: 2px solid var(--win-light);
+    margin: 4px;
   }
 
   .timer-area.waiting-start .timer-display {
@@ -72,7 +269,7 @@
   }
   @keyframes pulse-wait {
     0%, 100% { opacity: 1; }
-    50%       { opacity: 0.35; }
+    50%       { opacity: 0.3; }
   }
 
   .dtap-ring {
@@ -86,23 +283,31 @@
   }
   .dtap-ring.go { animation: dtap 0.45s ease-out forwards; }
   @keyframes dtap {
-    0%   { opacity: 0.9; transform: scale(0.4); }
+    0%   { opacity: 0.7; transform: scale(0.4); }
     100% { opacity: 0;   transform: scale(1.5); }
   }
 
-  .timer-phase { font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 500; flex-shrink: 0; }
+  .timer-phase {
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: bold;
+    flex-shrink: 0;
+    font-family: 'Consolas', 'Lucida Console', monospace;
+  }
   .phase-ready     { color: var(--accent); }
   .phase-countdown { color: var(--green); }
   .phase-overtime  { color: var(--red); }
   .phase-done      { color: var(--muted); }
 
   .timer-display {
-    font-weight: 700;
+    font-weight: bold;
     font-variant-numeric: tabular-nums;
-    letter-spacing: -2px;
+    letter-spacing: -1px;
     line-height: 1;
     font-size: clamp(64px, 28vw, 160px);
-    transition: color 0.2s;
+    font-family: 'Consolas', 'Lucida Console', 'DejaVu Sans Mono', monospace;
+    transition: color 0.1s;
   }
   @media (orientation: landscape) {
     .timer-display { font-size: clamp(64px, 38vh, 200px); }
@@ -115,103 +320,261 @@
 
   .timer-ms {
     font-size: clamp(28px, 11vw, 70px);
-    font-weight: 700;
+    font-weight: bold;
     font-variant-numeric: tabular-nums;
     letter-spacing: -1px;
     vertical-align: baseline;
+    font-family: 'Consolas', 'Lucida Console', 'DejaVu Sans Mono', monospace;
   }
   @media (orientation: landscape) {
     .timer-ms { font-size: clamp(28px, 16vh, 90px); }
   }
 
-  .timer-target { font-size: 13px; color: var(--muted); flex-shrink: 0; }
-  .tap-hint { font-size: 12px; color: var(--muted); flex-shrink: 0; transition: color 0.15s; }
-  .tap-hint.warn { color: var(--accent); font-weight: 600; }
+  .timer-target { font-size: 16px; color: var(--muted); flex-shrink: 0; font-family: 'Consolas', 'Lucida Console', monospace; font-weight: bold; }
+  .tap-hint { font-size: 15px; color: var(--muted); flex-shrink: 0; transition: color 0.15s; font-family: 'Consolas', 'Lucida Console', monospace; }
+  .tap-hint.warn { color: var(--red); font-weight: bold; }
 
-  .tappa-strip { background: var(--surface); border-top: 1px solid var(--border); padding: 8px 12px; display: flex; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-shrink: 0; }
+  /* Strip */
+  .tappa-strip {
+    background: var(--win);
+    border-top: 2px solid var(--win-darker);
+    padding: 5px 8px;
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex-shrink: 0;
+  }
   .tappa-strip::-webkit-scrollbar { display: none; }
-  .strip-item { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 48px; flex-shrink: 0; }
-  .strip-dot { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; border: 2px solid transparent; }
-  .dot-done   { background: var(--green);    color: #000; }
-  .dot-active { background: var(--accent);   color: #fff; border-color: #fff; }
-  .dot-future { background: var(--surface2); color: var(--muted); border-color: var(--border); }
-  .strip-name { font-size: 10px; color: var(--muted); text-align: center; max-width: 48px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .strip-item { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 44px; flex-shrink: 0; }
+  .strip-dot {
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: bold;
+    border-top: 2px solid var(--win-light);
+    border-left: 2px solid var(--win-light);
+    border-right: 2px solid var(--win-darker);
+    border-bottom: 2px solid var(--win-darker);
+  }
+  .dot-done   { background: var(--green); color: #fff; }
+  .dot-active {
+    background: var(--accent); color: #fff;
+    border-top: 2px solid var(--win-darker);
+    border-left: 2px solid var(--win-darker);
+    border-right: 2px solid var(--win-light);
+    border-bottom: 2px solid var(--win-light);
+  }
+  .dot-future { background: var(--win); color: var(--muted); }
+  .strip-name { font-size: 9px; color: var(--muted); text-align: center; max-width: 44px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  .tap-zone { background: var(--surface); border-top: 1px solid var(--border); padding: 12px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; }
-  .tap-btn { width: 100%; background: var(--accent); border: none; border-radius: 14px; color: #fff; font-size: 17px; font-weight: 600; padding: 16px; cursor: pointer; letter-spacing: 0.3px; }
-  .tap-btn:active { opacity: 0.85; transform: scale(0.99); }
-  .tap-btn.btn-done { background: var(--surface2); color: var(--muted); }
-  .back-btn { background: none; border: 1px solid var(--border); border-radius: 10px; color: var(--muted); font-size: 13px; padding: 7px 16px; cursor: pointer; }
-  .back-btn:active { opacity: 0.7; }
+  /* Tap zone */
+  .tap-zone {
+    background: var(--win);
+    border-top: 2px solid var(--win-darker);
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+  }
+  .tap-btn {
+    width: 100%;
+    background: var(--win);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 24px 16px;
+    border-top: 2px solid var(--win-light);
+    border-left: 2px solid var(--win-light);
+    border-right: 2px solid var(--win-darker);
+    border-bottom: 2px solid var(--win-darker);
+    letter-spacing: 0.2px;
+  }
+  .tap-btn:active {
+    border-top: 2px solid var(--win-darker);
+    border-left: 2px solid var(--win-darker);
+    border-right: 2px solid var(--win-light);
+    border-bottom: 2px solid var(--win-light);
+    padding: 25px 15px 23px 17px;
+  }
+  .tap-btn.btn-done { color: var(--muted); }
 
-
-  /* ─── LIVE DELTA ─── */
-  .live-delta { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; flex-shrink: 0; min-height: 28px; }
+  /* ── LIVE DELTA ── */
+  .live-delta { font-size: 22px; font-weight: bold; font-variant-numeric: tabular-nums; flex-shrink: 0; min-height: 28px; font-family: 'Courier New', monospace; }
   .delta-pos  { color: var(--green); }
   .delta-neg  { color: var(--red); }
   .delta-zero { color: var(--muted); }
 
-  /* ─── RESULTS ─── */
-  #results-screen { position: absolute; inset: 0; background: var(--bg); flex-direction: column; overflow-y: auto; padding: 16px; gap: 14px; z-index: 10; }
-  .res-row { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+  /* ── RESULTS ── */
+  #results-screen {
+    position: absolute; inset: 0;
+    background: var(--bg);
+    flex-direction: column;
+    overflow: hidden;
+    padding: 6px;
+    gap: 5px;
+    z-index: 10;
+  }
+  .results-window {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--win);
+  }
+  #results-inner {
+    flex: 1 1 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px;
+  }
+  .res-row {
+    background: var(--win);
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border-top: 2px solid var(--win-darker);
+    border-left: 2px solid var(--win-darker);
+    border-right: 2px solid var(--win-light);
+    border-bottom: 2px solid var(--win-light);
+  }
   .res-row-header { display: flex; align-items: center; justify-content: space-between; }
-  .res-name { font-size: 14px; font-weight: 600; }
-  .res-delta-big { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .res-detail { display: flex; gap: 14px; font-size: 12px; color: var(--muted); }
-  .res-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
-  .res-summary-row { display: flex; justify-content: space-between; font-size: 14px; }
-  .res-summary-row span:last-child { font-weight: 600; }
+  .res-name { font-size: 13px; font-weight: bold; }
+  .res-delta-big { font-size: 20px; font-weight: bold; font-variant-numeric: tabular-nums; font-family: 'Courier New', monospace; }
+  .res-detail { display: flex; gap: 12px; font-size: 11px; color: var(--muted); font-family: 'Courier New', monospace; }
+  .res-summary {
+    background: var(--win);
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+    border-top: 2px solid var(--win-darker);
+    margin: 0 6px 6px;
+  }
+  .res-summary-row { display: flex; justify-content: space-between; font-size: 13px; }
+  .res-summary-row span:last-child { font-weight: bold; font-family: 'Courier New', monospace; }
+  .results-footer { padding: 6px; flex-shrink: 0; }
+
+  /* status bar */
+  .statusbar {
+    background: var(--win);
+    border-top: 2px solid var(--win-darker);
+    padding: 2px 8px;
+    font-size: 11px;
+    color: var(--muted);
+    flex-shrink: 0;
+    display: flex;
+    gap: 8px;
+  }
+  .statusbar-item {
+    border-top: 1px solid var(--win-darker);
+    border-left: 1px solid var(--win-darker);
+    border-right: 1px solid var(--win-light);
+    border-bottom: 1px solid var(--win-light);
+    padding: 1px 6px;
+  }
 
   @media (orientation: landscape) and (max-height: 500px) {
-    .race-header { padding: 5px 14px; }
-    .tappa-strip { padding: 5px 10px; }
-    .strip-dot { width: 22px; height: 22px; font-size: 10px; }
-    .tap-zone { padding: 8px 16px; gap: 6px; }
-    .tap-btn { padding: 11px; font-size: 15px; }
-    .back-btn { padding: 5px 12px; font-size: 12px; }
+    .race-header { padding: 3px 8px; }
+    .tappa-strip { padding: 3px 6px; }
+    .strip-dot { width: 20px; height: 20px; font-size: 9px; }
+    .tap-zone { padding: 5px 8px; }
+    .tap-btn { padding: 14px 10px; font-size: 14px; }
   }
+</style>
+<style id="modern-theme" disabled>
+  :root {
+    --bg: #0f0f0f !important;
+    --win: #1a1a1a !important;
+    --win-dark: #333 !important;
+    --win-darker: #000 !important;
+    --win-light: #555 !important;
+    --win-title: #6366f1 !important;
+    --win-title-text: #ffffff !important;
+    --text: #f0f0f0 !important;
+    --muted: #888 !important;
+    --green: #22c55e !important;
+    --red: #ef4444 !important;
+    --accent: #6366f1 !important;
+    --inset-bg: #0f0f0f !important;
+  }
+  html, body { background: #0f0f0f !important; }
+  .win-titlebar { background: #6366f1 !important; }
+  .timer-area { background: #0f0f0f !important; }
+  input.win-input { background: #242424 !important; color: #f0f0f0 !important; border-color: #555 !important; }
 </style>
 </head>
 <body>
 
 <div id="setup-screen">
-  <div class="screen-title">🏁 ASI Regolarità</div>
-  <div class="screen-sub">Imposta le tappe e i tempi</div>
-  <div id="tappe-list"></div>
-  <button class="add-btn" onclick="addTappa()">+ Aggiungi tappa</button>
-  <button class="start-btn" onclick="startRace()">Avvia gara</button>
+  <div class="setup-window win-window">
+    <div class="win-titlebar">
+      <div class="win-titlebar-left">[*] ASI Regolarita' - Configurazione</div>
+    </div>
+    <div class="setup-body">
+      <div style="font-size:11px; color:var(--muted); margin-bottom:2px;">Tappe e tempi:</div>
+      <div id="tappe-list"></div>
+    </div>
+    <div class="setup-footer">
+      <button class="add-btn" onclick="addTappa()">[+] Aggiungi tappa</button>
+      <button class="add-btn" id="theme-btn" onclick="toggleTheme()" style="color:var(--muted);">[T] Tema</button>
+      <button class="start-btn" onclick="startRace()">[>] Avvia gara</button>
+    </div>
+  </div>
 </div>
 
 <div id="race-screen">
-  <div class="race-header">
-    <div class="race-header-left">
-      <span class="race-label">Tappa in corso</span>
-      <span class="race-tappa-name" id="cur-name">—</span>
+  <div class="race-window win-window">
+    <div class="win-titlebar">
+      <div class="win-titlebar-left">[>] ASI Regolarita' - Gara in corso</div>
+      <span id="cur-progress" style="font-size:11px; font-weight:normal;"></span>
     </div>
-    <span class="race-progress" id="cur-progress"></span>
-  </div>
 
-  <div class="timer-area" id="timer-area">
-    <div class="dtap-ring" id="dtap-ring"></div>
-    <span class="timer-phase" id="timer-phase">Pronto</span>
-    <div class="timer-display" id="timer-display">00:00</div>
-    <div class="timer-target" id="timer-target"></div>
-    <div class="live-delta" id="live-delta"></div>
-    <div class="tap-hint" id="tap-hint">▶ Tap per iniziare</div>
-  </div>
+    <div class="race-header">
+      <div class="race-header-left">
+        <span class="race-label">Tappa in corso</span>
+        <span class="race-tappa-name" id="cur-name">—</span>
+      </div>
+    </div>
 
-  <div id="results-screen" style="display:none;">
-    <div class="screen-title" style="padding-bottom:4px;">📊 Risultati gara</div>
-    <div id="results-list"></div>
-    <div class="res-summary" id="results-summary"></div>
-    <button class="start-btn" onclick="goSetup()">← Nuova gara</button>
-  </div>
+    <div class="timer-area" id="timer-area">
+      <div class="dtap-ring" id="dtap-ring"></div>
+      <span class="timer-phase" id="timer-phase">Pronto</span>
+      <div class="timer-display" id="timer-display">00:00</div>
+      <div class="timer-target" id="timer-target"></div>
+      <div class="live-delta" id="live-delta"></div>
+      <div class="tap-hint" id="tap-hint">[>] Tap per iniziare</div>
+    </div>
 
-  <div class="tappa-strip" id="tappa-strip"></div>
+    <div id="results-screen" style="display:none;">
+      <div class="results-window win-window" style="flex:1 1 0; display:flex; flex-direction:column; overflow:hidden; margin:0;">
+        <div class="win-titlebar">[=] Risultati gara</div>
+        <div id="results-inner">
+          <div id="results-list"></div>
+        </div>
+        <div class="res-summary" id="results-summary"></div>
+      </div>
+      <div class="results-footer">
+        <button class="start-btn" onclick="goSetup()" style="width:100%;">[<] Nuova gara</button>
+      </div>
+    </div>
 
-  <div class="tap-zone">
-    <button class="tap-btn" id="main-tap-btn">▶ Avvia tappa</button>
-    <button class="back-btn" onclick="goSetup()">← Modifica tappe</button>
+    <div class="tappa-strip" id="tappa-strip"></div>
+
+    <div class="tap-zone">
+      <button class="tap-btn" id="main-tap-btn">[>] Avvia tappa</button>
+    </div>
+
+    <div class="statusbar">
+      <span class="statusbar-item" id="status-bar">Pronto</span>
+    </div>
   </div>
 </div>
 
@@ -256,7 +619,11 @@ function beep(freq, durationMs, type = 'sine', gain = 0.4) {
   } catch(e) {}
 }
 
-// Tick countdown: tono scende con il tempo rimasto
+// Suono avvio tappa: due toni brevi ascendenti
+function soundStart() {
+  beep(520, 80, 'sine', 0.3);
+  setTimeout(() => beep(780, 100, 'sine', 0.35), 90);
+}
 // remainingSec: secondi rimasti (da totalMs della tappa)
 // Mappa: tempo pieno = 880Hz, 0 = 300Hz
 function soundTick(remainingSec, totalSec) {
@@ -320,11 +687,11 @@ function addTappa(name = '', mm = '', ss = '') {
   div.id = 'tappa-row-' + id;
   div.innerHTML = `
     <span class="tappa-num">#${tappaCount}</span>
-    <input class="tappa-name-input" type="text" placeholder="Nome tappa" value="${name}" id="name-${id}">
+    <input class="tappa-name-input win-input" type="text" placeholder="Nome tappa" value="${name}" id="name-${id}">
     <div class="time-input-wrap">
-      <input class="time-num time-mm" type="number" min="0" max="99" placeholder="mm" value="${mm}" id="mm-${id}" inputmode="numeric">
+      <input class="time-num time-mm win-input" type="number" min="0" max="99" placeholder="mm" value="${mm}" id="mm-${id}" inputmode="numeric">
       <span class="time-sep">:</span>
-      <input class="time-num time-ss" type="number" min="0" max="59" placeholder="ss" value="${ss}" id="ss-${id}" inputmode="numeric">
+      <input class="time-num time-ss win-input" type="number" min="0" max="59" placeholder="ss" value="${ss}" id="ss-${id}" inputmode="numeric">
     </div>
     <button class="del-btn" onclick="removeTappa(${id})">✕</button>
   `;
@@ -438,12 +805,12 @@ function prepareNextTappa() {
 
     const hint = document.getElementById('tap-hint');
     hint.classList.remove('warn');
-    hint.textContent = '▶ Tap per iniziare';
+    hint.textContent = '[>] Tap per iniziare';
 
     document.getElementById('timer-area').classList.add('waiting-start');
 
     const btn = document.getElementById('main-tap-btn');
-    btn.textContent = '▶ Avvia gara';
+    btn.textContent = '[>] Avvia gara';
     btn.className = 'tap-btn';
   } else {
     // Tappe successive: parte subito
@@ -455,7 +822,8 @@ function prepareNextTappa() {
 function startCurrentTappa() {
   waitingForStart = false;
   document.getElementById('timer-area').classList.remove('waiting-start');
-  if (navigator.vibrate) navigator.vibrate(30);
+  if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
+  soundStart();
   // Reset sound state
   lastTickSecond = -1;
   lastOverSecond = -1;
@@ -497,7 +865,7 @@ document.getElementById('timer-area').addEventListener('click', function(e) {
 
     const hint = document.getElementById('tap-hint');
     hint.classList.add('warn');
-    hint.textContent = '▶▶ Ancora un tap!';
+    hint.textContent = '[>>] Ancora un tap!';
 
     clearTimeout(hintResetTimer);
     hintResetTimer = setTimeout(() => {
@@ -531,6 +899,8 @@ function updateHeader() {
   const t = tappe[currentIdx];
   document.getElementById('cur-name').textContent = t.name;
   document.getElementById('cur-progress').textContent = (currentIdx + 1) + ' / ' + tappe.length;
+  const sb = document.getElementById('status-bar');
+  if (sb) sb.textContent = 'Tappa ' + (currentIdx+1) + ' di ' + tappe.length + ' - ' + t.name;
 }
 
 function setHint() {
@@ -538,7 +908,7 @@ function setHint() {
   const hint = document.getElementById('tap-hint');
   hint.classList.remove('warn');
   const isLast = currentIdx === tappe.length - 1;
-  hint.textContent = isLast ? 'Doppio tap per terminare' : 'Doppio tap • o usa il bottone';
+  hint.textContent = isLast ? '[>>] Doppio tap per terminare' : '[>>] Doppio tap o usa il bottone';
 }
 
 function renderDisplay() {
@@ -600,7 +970,7 @@ function renderDisplay() {
   }
 
   const isLast = currentIdx === tappe.length - 1;
-  btn.textContent = isLast ? '🏁 Termina gara' : '▶ Tappa successiva';
+  btn.textContent = isLast ? '[X] Termina gara' : '[>] Tappa successiva';
   btn.className = 'tap-btn';
 }
 
@@ -681,6 +1051,16 @@ function goSetup() {
 }
 
 function pad(n) { return String(n).padStart(2, '0'); }
+
+/* ══════ THEME ══════ */
+let modernTheme = false;
+function toggleTheme() {
+  modernTheme = !modernTheme;
+  const sheet = document.getElementById('modern-theme');
+  sheet.disabled = !modernTheme;
+  document.getElementById('theme-btn').textContent = modernTheme ? '[T] Win98' : '[T] Tema';
+  document.body.style.background = modernTheme ? '#0f0f0f' : '';
+}
 
 if (!loadSavedTappe()) {
   addTappa('Partenza', '5', '0');
