@@ -215,7 +215,6 @@
     display: flex;
     gap: 8px;
     padding: 10px 10px 12px;
-    justify-content: flex-end;
     border-top: 1px solid var(--win-dark);
     flex-shrink: 0;
   }
@@ -224,7 +223,10 @@
     color: var(--accent);
     font-family: inherit;
     font-size: 16px;
-    padding: 10px 14px;
+    font-weight: bold;
+    padding: 14px 8px;
+    flex: 1;
+    text-align: center;
     border-top: 2px solid var(--win-light);
     border-left: 2px solid var(--win-light);
     border-right: 2px solid var(--win-darker);
@@ -236,7 +238,9 @@
     font-family: inherit;
     font-size: 16px;
     font-weight: bold;
-    padding: 10px 22px;
+    padding: 14px 8px;
+    flex: 1;
+    text-align: center;
     border-top: 2px solid var(--win-light);
     border-left: 2px solid var(--win-light);
     border-right: 2px solid var(--win-darker);
@@ -404,7 +408,7 @@
     border-bottom: 2px solid var(--win-light);
   }
   .dot-future { background: var(--win); color: var(--muted); }
-  .strip-name { font-size: 11px; color: var(--muted); text-align: center; max-width: 52px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .strip-name { display: none; }
 
   /* Tap zone */
   .tap-zone {
@@ -524,432 +528,7 @@
   }
 </style>
 
-<style id="aero-theme" media="none">
-  @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap');
 
-  :root {
-    --bg: #1a3a5c !important;
-    --win: rgba(200,220,245,0.75) !important;
-    --win-dark: rgba(100,150,200,0.5) !important;
-    --win-darker: rgba(60,100,160,0.7) !important;
-    --win-light: rgba(255,255,255,0.9) !important;
-    --win-title: rgba(80,140,210,0.0) !important;
-    --win-title-text: #ffffff !important;
-    --text: #1a1a2e !important;
-    --muted: #3a5a8a !important;
-    --green: #1a8a3a !important;
-    --red: #c0001a !important;
-    --accent: #0055cc !important;
-    --inset-bg: rgba(230,240,255,0.85) !important;
-  }
-
-  html, body {
-    background: linear-gradient(135deg, #1a3a6c 0%, #0a1a3a 50%, #1a2a5a 100%) !important;
-    font-family: 'Segoe UI', Arial, sans-serif !important;
-  }
-
-  /* Glass window */
-  .win-window {
-    background: rgba(200,225,255,0.55) !important;
-    backdrop-filter: blur(18px) saturate(1.8) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(1.8) !important;
-    border-radius: 10px !important;
-    border: 1px solid rgba(255,255,255,0.6) !important;
-    box-shadow: 0 8px 32px rgba(0,40,120,0.45), inset 0 1px 0 rgba(255,255,255,0.8) !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-  }
-
-  /* Glass titlebar */
-  .win-titlebar {
-    background: linear-gradient(180deg,
-      rgba(140,190,255,0.9) 0%,
-      rgba(80,140,220,0.85) 45%,
-      rgba(60,110,200,0.9) 50%,
-      rgba(100,160,240,0.85) 100%) !important;
-    backdrop-filter: blur(8px) !important;
-    border-bottom: 1px solid rgba(255,255,255,0.4) !important;
-    border-radius: 9px 9px 0 0 !important;
-    padding: 7px 12px !important;
-    font-family: 'Segoe UI', Arial, sans-serif !important;
-    font-size: 15px !important;
-    text-shadow: 0 1px 2px rgba(0,0,80,0.6) !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5) !important;
-  }
-
-  /* Raised borders → rounded glass panels */
-  .tappa-row, .res-row {
-    background: rgba(210,230,255,0.6) !important;
-    border: 1px solid rgba(255,255,255,0.7) !important;
-    border-radius: 6px !important;
-    box-shadow: 0 2px 8px rgba(0,40,120,0.15), inset 0 1px 0 rgba(255,255,255,0.6) !important;
-  }
-
-  /* Sunken scrollable areas */
-  #tappe-list, #results-inner {
-    background: rgba(180,210,250,0.35) !important;
-    border: 1px solid rgba(100,160,220,0.5) !important;
-    border-radius: 6px !important;
-    box-shadow: inset 0 2px 6px rgba(0,40,120,0.2) !important;
-  }
-
-  /* Inputs */
-  input.win-input {
-    background: rgba(240,248,255,0.85) !important;
-    border: 1px solid rgba(100,160,220,0.6) !important;
-    border-radius: 4px !important;
-    box-shadow: inset 0 1px 3px rgba(0,40,120,0.15) !important;
-    color: #1a1a2e !important;
-  }
-
-  /* Buttons */
-  .add-btn, .start-btn, .del-btn, .tap-btn, .win-btn {
-    background: linear-gradient(180deg,
-      rgba(180,220,255,0.9) 0%,
-      rgba(120,170,240,0.85) 45%,
-      rgba(100,150,230,0.9) 50%,
-      rgba(150,200,255,0.85) 100%) !important;
-    border: 1px solid rgba(255,255,255,0.7) !important;
-    border-radius: 6px !important;
-    box-shadow: 0 2px 6px rgba(0,40,120,0.25), inset 0 1px 0 rgba(255,255,255,0.6) !important;
-    color: #1a1a2e !important;
-    text-shadow: 0 1px 0 rgba(255,255,255,0.5) !important;
-  }
-  .add-btn:active, .start-btn:active, .tap-btn:active {
-    background: linear-gradient(180deg,
-      rgba(100,150,230,0.9) 0%,
-      rgba(120,170,240,0.85) 100%) !important;
-    box-shadow: inset 0 2px 4px rgba(0,40,120,0.3) !important;
-    transform: none !important;
-    padding: unset !important;
-  }
-  .del-btn { color: #aa0011 !important; }
-
-  /* Timer area */
-  .timer-area {
-    background: rgba(200,225,255,0.4) !important;
-    border: 1px solid rgba(255,255,255,0.5) !important;
-    border-radius: 8px !important;
-    box-shadow: inset 0 2px 8px rgba(0,40,120,0.15) !important;
-    margin: 6px !important;
-  }
-
-  /* Strip */
-  .tappa-strip {
-    background: rgba(160,200,240,0.4) !important;
-    border-top: 1px solid rgba(255,255,255,0.3) !important;
-  }
-  .strip-dot {
-    border-radius: 50% !important;
-    border: 1px solid rgba(255,255,255,0.6) !important;
-    box-shadow: 0 1px 4px rgba(0,40,120,0.2) !important;
-  }
-  .dot-active {
-    background: linear-gradient(180deg, #60a0f0, #0055cc) !important;
-    box-shadow: 0 0 8px rgba(0,100,255,0.5) !important;
-  }
-  .dot-done {
-    background: linear-gradient(180deg, #40c060, #008030) !important;
-  }
-
-  /* Tap zone */
-  .tap-zone {
-    background: rgba(160,200,240,0.4) !important;
-    border-top: 1px solid rgba(255,255,255,0.3) !important;
-  }
-
-  /* Setup/results body */
-  .setup-body {
-    background: transparent !important;
-  }
-  .setup-footer {
-    background: rgba(160,200,240,0.3) !important;
-    border-top: 1px solid rgba(255,255,255,0.3) !important;
-  }
-
-  /* Summary */
-  .res-summary {
-    background: rgba(210,230,255,0.6) !important;
-    border: 1px solid rgba(255,255,255,0.7) !important;
-    border-radius: 6px !important;
-    box-shadow: 0 2px 8px rgba(0,40,120,0.15) !important;
-  }
-
-  /* Phase colors slightly adjusted for light bg */
-  .phase-countdown { color: #006820 !important; }
-  .phase-overtime  { color: #aa0010 !important; }
-  .phase-ready     { color: #0044aa !important; }
-  .display-green   { color: #006820 !important; }
-  .display-red     { color: #aa0010 !important; }
-  .display-accent  { color: #0044aa !important; }
-  .delta-pos { color: #006820 !important; }
-  .delta-neg { color: #aa0010 !important; }
-</style>
-<style id="modern-theme" media="none">
-  /* ═══ Frutiger Aero / Windows 7 ═══ */
-  :root {
-    --bg: transparent !important;
-    --win: rgba(255,255,255,0.18) !important;
-    --win-dark: rgba(255,255,255,0.25) !important;
-    --win-darker: rgba(0,0,0,0.25) !important;
-    --win-light: rgba(255,255,255,0.9) !important;
-    --win-title: transparent !important;
-    --win-title-text: #ffffff !important;
-    --text: #ffffff !important;
-    --muted: rgba(255,255,255,0.75) !important;
-    --green: #00ff90 !important;
-    --red: #ff4455 !important;
-    --accent: #00e8c0 !important;
-    --inset-bg: rgba(255,255,255,0.22) !important;
-  }
-
-  /* ── Bliss-style grass background ── */
-  html, body {
-    background:
-      radial-gradient(ellipse 220% 55% at 50% -5%,
-        rgba(120,255,200,0.55) 0%, transparent 60%),
-      radial-gradient(ellipse 140% 65% at 8%  65%,
-        rgba(80,220,120,0.60) 0%, transparent 68%),
-      radial-gradient(ellipse 140% 60% at 92% 72%,
-        rgba(60,200,100,0.55) 0%, transparent 65%),
-      radial-gradient(ellipse 70%  40% at 50% 42%,
-        rgba(140,255,160,0.40) 0%, transparent 58%),
-      linear-gradient(178deg,
-        #001505 0%,
-        #00280a 12%,
-        #005018 28%,
-        #008c35 46%,
-        #00b045 55%,
-        #007828 70%,
-        #003810 85%,
-        #001005 100%) fixed !important;
-    font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif !important;
-  }
-
-  /* ── Glass window ── */
-  .win-window {
-    background: rgba(255,255,255,0.14) !important;
-    backdrop-filter: blur(22px) saturate(1.9) brightness(1.08) !important;
-    -webkit-backdrop-filter: blur(22px) saturate(1.9) brightness(1.08) !important;
-    border-radius: 12px !important;
-    border: 1.5px solid rgba(255,255,255,0.55) !important;
-    box-shadow:
-      0 8px 36px rgba(0,0,0,0.35),
-      inset 0 1px 0 rgba(255,255,255,0.7),
-      inset 0 -1px 0 rgba(0,0,0,0.1) !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-  }
-
-  /* ── Titlebar ── */
-  .win-titlebar {
-    background: linear-gradient(180deg,
-      rgba(60,210,170,0.88) 0%,
-      rgba(0,175,140,0.85) 46%,
-      rgba(0,150,120,0.90) 52%,
-      rgba(30,200,160,0.85) 100%) !important;
-    border-bottom: 1px solid rgba(255,255,255,0.3) !important;
-    border-radius: 11px 11px 0 0 !important;
-    padding: 7px 14px !important;
-    color: #ffffff !important;
-    font-size: 15px !important;
-    text-shadow: 0 1px 3px rgba(0,60,40,0.6) !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.45) !important;
-  }
-
-  input.win-input::placeholder { color: #888888 !important; font-weight: 400 !important; }
-  .tap-hint.warn { color: #ffee44 !important; text-shadow: 0 1px 2px rgba(60,40,0,0.7) !important; }
-  .timer-target { color: rgba(255,255,255,0.9) !important; text-shadow: 0 1px 2px rgba(0,40,10,0.6) !important; }
-
-  /* ── Timer colors — subtle glow only ── */
-  .phase-countdown { color: #ffffff !important; text-shadow: 0 0 6px rgba(0,255,120,0.4), 0 1px 2px rgba(0,50,15,0.8) !important; }
-  .phase-overtime  { color: #ffdddd !important; text-shadow: 0 0 6px rgba(255,60,80,0.4), 0 1px 2px rgba(60,0,0,0.8) !important; }
-  .phase-ready     { color: #ddfff5 !important; text-shadow: 0 0 5px rgba(0,220,180,0.3), 0 1px 2px rgba(0,50,30,0.8) !important; }
-  .display-green   { color: #ffffff !important; text-shadow: 0 0 8px rgba(0,255,120,0.35), 0 2px 3px rgba(0,50,15,0.8) !important; }
-  .display-red     { color: #ffaaaa !important; text-shadow: 0 0 8px rgba(255,60,80,0.35), 0 2px 3px rgba(60,0,0,0.8) !important; }
-  .display-accent  { color: #ddfff5 !important; text-shadow: 0 0 6px rgba(0,220,180,0.3), 0 2px 3px rgba(0,50,30,0.8) !important; }
-  .display-done    { color: rgba(255,255,255,0.5) !important; text-shadow: none !important; }
-  .delta-pos { color: #ccffdd !important; text-shadow: 0 1px 2px rgba(0,50,15,0.7) !important; }
-  .delta-neg { color: #ffcccc !important; text-shadow: 0 1px 2px rgba(60,0,0,0.7) !important; }
-  .delta-zero { color: rgba(255,255,255,0.7) !important; text-shadow: 0 1px 2px rgba(0,30,10,0.5) !important; }
-  .res-delta-big { color: inherit !important; }
-
-  /* ── Buttons ── */
-  .add-btn, .start-btn, .del-btn, .tap-btn, .win-btn {
-    background: linear-gradient(180deg,
-      rgba(80,230,190,0.88) 0%,
-      rgba(0,190,155,0.84) 47%,
-      rgba(0,160,130,0.90) 53%,
-      rgba(50,210,175,0.85) 100%) !important;
-    border: 1.5px solid rgba(255,255,255,0.65) !important;
-    border-radius: 20px !important;
-    box-shadow:
-      0 3px 10px rgba(0,0,0,0.25),
-      inset 0 1px 0 rgba(255,255,255,0.6),
-      inset 0 -1px 0 rgba(0,0,0,0.1) !important;
-    color: #ffffff !important;
-    font-weight: 600 !important;
-    text-shadow: 0 1px 2px rgba(0,60,40,0.6) !important;
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
-    border-top-width: 1.5px !important;
-    border-bottom-width: 1.5px !important;
-    border-left-width: 1.5px !important;
-    border-right-width: 1.5px !important;
-  }
-  .tap-btn {
-    padding-top: 28px !important;
-    padding-bottom: 28px !important;
-    border-radius: 20px !important;
-    font-size: 19px !important;
-  }
-  .add-btn:active, .start-btn:active, .tap-btn:active, .win-btn:active {
-    background: linear-gradient(180deg,
-      rgba(0,130,105,0.96) 0%,
-      rgba(0,105,85,0.99) 100%) !important;
-    box-shadow: inset 0 3px 8px rgba(0,0,0,0.3) !important;
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-    color: #ffffff !important;
-  }
-  .tap-btn:active {
-    padding-top: 28px !important;
-    padding-bottom: 28px !important;
-  }
-  .del-btn {
-    color: #ffffff !important;
-    padding: 6px 10px !important;
-    border-radius: 20px !important;
-  }
-  .del-btn:active { padding: 6px 10px !important; color: #ffffff !important; }
-  .tap-btn.btn-done {
-    color: rgba(255,255,255,0.55) !important;
-    background: rgba(255,255,255,0.15) !important;
-    box-shadow: none !important;
-  }
-
-  /* ── Inputs ── */
-  input.win-input {
-    background: rgba(255,255,255,0.45) !important;
-    border: 1.5px solid rgba(255,255,255,0.45) !important;
-    border-radius: 6px !important;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.2) !important;
-    color: #ffffff !important;
-    text-shadow: 0 1px 2px rgba(0,60,20,0.7) !important;
-    font-weight: 700 !important;
-  }
-
-  /* ── Static labels slightly off-white ── */
-  .tappa-num, .time-sep, .race-label, .race-tappa-name,
-  .race-progress, .timer-phase, .timer-target, .tap-hint,
-  .res-name, .res-summary-row span, .strip-name,
-  .statusbar, .statusbar-item {
-    color: rgba(220,240,225,1) !important;
-    text-shadow: 0 1px 2px rgba(0,60,20,0.7) !important;
-    font-weight: 700 !important;
-  }
-
-  /* ── Scrollable areas ── */
-  #tappe-list, #results-inner {
-    background: rgba(0,0,0,0.12) !important;
-    border: 1.5px solid rgba(255,255,255,0.3) !important;
-    border-radius: 8px !important;
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.15) !important;
-  }
-
-  /* ── Rows ── */
-  .tappa-row, .res-row {
-    background: rgba(255,255,255,0.18) !important;
-    border: 1.5px solid rgba(255,255,255,0.5) !important;
-    border-radius: 8px !important;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.5) !important;
-  }
-
-  /* ── Timer area ── */
-  .timer-area {
-    background: rgba(0,0,0,0.10) !important;
-    border: 1.5px solid rgba(255,255,255,0.35) !important;
-    border-radius: 10px !important;
-    box-shadow: inset 0 2px 10px rgba(0,0,0,0.12) !important;
-    margin: 6px !important;
-  }
-
-  /* ── Strip and tap zone ── */
-  .tappa-strip, .tap-zone {
-    background: rgba(0,0,0,0.10) !important;
-    border-top: 1px solid rgba(255,255,255,0.2) !important;
-  }
-  .strip-dot {
-    border-radius: 50% !important;
-    border: 1.5px solid rgba(255,255,255,0.6) !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.2) !important;
-  }
-  .dot-active {
-    background: linear-gradient(180deg, #40ffd0, #00b890) !important;
-    box-shadow: 0 0 10px rgba(0,255,200,0.6) !important;
-  }
-  .dot-done { background: linear-gradient(180deg, #60ff90, #00a840) !important; }
-  .dot-future { background: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.7) !important; }
-
-  /* ── Footer / summary ── */
-  .setup-footer {
-    background: rgba(0,0,0,0.08) !important;
-    border-top: 1px solid rgba(255,255,255,0.2) !important;
-    border-radius: 0 0 11px 11px !important;
-  }
-  .res-summary {
-    background: rgba(255,255,255,0.18) !important;
-    border: 1.5px solid rgba(255,255,255,0.5) !important;
-    border-radius: 8px !important;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
-  }
-  .res-summary-row span,
-  .res-summary-row span:last-child {
-    color: #ffffff !important;
-    text-shadow: 0 1px 2px rgba(0,60,20,0.7) !important;
-    font-weight: 700 !important;
-  }
-  .res-delta-big {
-    color: #ffffff !important;
-    text-shadow: 0 1px 2px rgba(0,60,20,0.7) !important;
-  }
-  .res-name {
-    color: #ffffff !important;
-    text-shadow: 0 1px 2px rgba(0,60,20,0.7) !important;
-    font-weight: 700 !important;
-  }
-  .res-detail span {
-    color: rgba(220,240,225,0.9) !important;
-    text-shadow: 0 1px 2px rgba(0,60,20,0.6) !important;
-  }
-
-
-  .win-tb-btn {
-    background: linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.2)) !important;
-    border: 1.5px solid rgba(255,255,255,0.6) !important;
-    border-radius: 4px !important;
-    color: #ffffff !important;
-    width: 24px !important;
-    height: 20px !important;
-    font-size: 13px !important;
-    font-weight: bold !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    line-height: 1 !important;
-  }
-  .win-tb-btn:active {
-    background: rgba(0,0,0,0.2) !important;
-    border: 1.5px solid rgba(255,255,255,0.4) !important;
-  }
-  /* ── Scrollbar ── */
-  ::-webkit-scrollbar { width: 8px !important; }
-  ::-webkit-scrollbar-track { background: rgba(255,255,255,0.08) !important; border-radius: 4px !important; }
-  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.35) !important; border-radius: 4px !important; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.55) !important; }
-</style>
 </head>
 <body>
 
@@ -964,9 +543,8 @@
       <div id="tappe-list"></div>
     </div>
     <div class="setup-footer">
-      <button class="add-btn" onclick="addTappa()" style="font-weight:bold;">+ Aggiungi tappa</button>
-      <button class="add-btn" id="theme-btn" onclick="toggleTheme()" style="font-weight:bold;">[T] Aero</button>
-      <button class="start-btn" onclick="startRace()">[>] Avvia gara</button>
+      <button class="add-btn" onclick="addTappa()" style="font-weight:bold;">[+] Aggiungi tappa</button>
+      <button class="start-btn" onclick="startRace()" style="font-weight:bold;">[>] Avvia gara</button>
     </div>
   </div>
 </div>
@@ -1484,36 +1062,11 @@ function goSetup() {
 
 function pad(n) { return String(n).padStart(2, '0'); }
 
-/* ══════ THEME ══════ */
-let currentTheme = 'win98';
-
-function applyTheme() {
-  const modernSheet = document.getElementById('modern-theme');
-  const aeroSheet   = document.getElementById('aero-theme');
-  modernSheet.media = currentTheme === 'aero'  ? 'all' : 'none';
-  aeroSheet.media   = 'none'; // unused now
-  document.getElementById('theme-btn').textContent =
-    currentTheme === 'win98' ? '[T] Aero' : '[T] Win98';
-}
-
-function toggleTheme() {
-  currentTheme = currentTheme === 'aero' ? 'win98' : 'aero';
-  applyTheme();
-  try { localStorage.setItem('asi_theme', currentTheme); } catch(e) {}
-}
-
 if (!loadSavedTappe()) {
   addTappa('Partenza', '5', '0');
   addTappa('Checkpoint 1', '0', '45');
   addTappa('Arrivo', '6', '0');
 }
-
-// Restore theme
-try {
-  const saved = localStorage.getItem('asi_theme');
-  if (saved === 'aero') currentTheme = 'aero';
-} catch(e) {}
-applyTheme();
 </script>
 </body>
 </html>
