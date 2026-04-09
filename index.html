@@ -16,108 +16,153 @@
     --muted: #888;
     --green: #22c55e;
     --red: #ef4444;
-    --amber: #f59e0b;
-    --blue: #3b82f6;
     --accent: #6366f1;
   }
 
   html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overflow-x: hidden; }
 
-  /* ─── SETUP SCREEN ─── */
+  /* ─── SETUP ─── */
   #setup-screen { display: flex; flex-direction: column; min-height: 100vh; padding: 16px; gap: 12px; }
-
   .screen-title { font-size: 20px; font-weight: 600; text-align: center; padding: 8px 0 4px; letter-spacing: 0.5px; }
   .screen-sub { font-size: 13px; color: var(--muted); text-align: center; margin-top: -4px; margin-bottom: 4px; }
 
   .tappa-row { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
   .tappa-num { font-size: 13px; color: var(--muted); min-width: 24px; }
-  .tappa-name-input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; padding: 8px 10px; outline: none; }
+  .tappa-name-input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; padding: 8px 10px; outline: none; min-width: 0; }
   .tappa-name-input:focus { border-color: var(--accent); }
-  .time-input-wrap { display: flex; align-items: center; gap: 4px; }
+  .time-input-wrap { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
   .time-num { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; padding: 8px 0; text-align: center; outline: none; }
   .time-num:focus { border-color: var(--accent); }
   .time-mm { width: 44px; }
   .time-ss { width: 44px; }
   .time-sep { color: var(--muted); font-size: 18px; font-weight: 700; }
-  .del-btn { background: none; border: none; color: var(--red); font-size: 20px; cursor: pointer; padding: 4px 6px; border-radius: 6px; line-height: 1; }
+  .del-btn { background: none; border: none; color: var(--red); font-size: 20px; cursor: pointer; padding: 4px 6px; border-radius: 6px; line-height: 1; flex-shrink: 0; }
 
   .add-btn { background: var(--surface2); border: 1px dashed var(--border); border-radius: 12px; color: var(--accent); font-size: 15px; font-weight: 500; padding: 14px; cursor: pointer; text-align: center; width: 100%; }
   .add-btn:active { opacity: 0.7; }
-
   .start-btn { background: var(--accent); border: none; border-radius: 14px; color: #fff; font-size: 18px; font-weight: 600; padding: 18px; cursor: pointer; width: 100%; margin-top: auto; letter-spacing: 0.3px; }
   .start-btn:active { opacity: 0.85; transform: scale(0.99); }
 
-  /* ─── RACE SCREEN ─── */
-  #race-screen { display: none; flex-direction: column; height: 100vh; padding: 0; overflow: hidden; }
+  /* ─── RACE ─── */
+  #race-screen { display: none; flex-direction: column; height: 100vh; overflow: hidden; }
 
-  .race-header { padding: 10px 16px 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .race-header { padding: 10px 16px 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
   .race-header-left { display: flex; flex-direction: column; }
   .race-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
   .race-tappa-name { font-size: 16px; font-weight: 600; }
   .race-progress { font-size: 13px; color: var(--muted); }
 
-  /* Big timer */
-  .timer-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; user-select: none; background: var(--bg); }
-  .timer-area:active { background: rgba(255,255,255,0.02); }
+  .timer-area {
+    flex: 1 1 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--bg);
+    overflow: hidden;
+    padding: 8px 12px;
+  }
 
-  .timer-phase { font-size: 13px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 500; }
+  /* Anello feedback primo tap */
+  .dtap-ring {
+    position: absolute;
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    border: 3px solid var(--accent);
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.4);
+  }
+  .dtap-ring.go {
+    animation: dtap 0.45s ease-out forwards;
+  }
+  @keyframes dtap {
+    0%   { opacity: 0.9; transform: scale(0.4); }
+    100% { opacity: 0;   transform: scale(1.5); }
+  }
+
+  .timer-phase { font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 500; flex-shrink: 0; }
   .phase-countdown { color: var(--green); }
   .phase-overtime { color: var(--red); }
   .phase-done { color: var(--muted); }
 
-  .timer-display { font-size: clamp(64px, 18vw, 100px); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -2px; line-height: 1; }
+  .timer-display {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -2px;
+    line-height: 1;
+    font-size: clamp(48px, 20vw, 120px);
+    transition: color 0.2s;
+  }
+  @media (orientation: landscape) {
+    .timer-display { font-size: clamp(48px, 28vh, 160px); }
+  }
+
   .display-green { color: var(--green); }
   .display-red { color: var(--red); }
   .display-done { color: var(--muted); }
 
-  .timer-target { font-size: 14px; color: var(--muted); }
-  .tap-hint { font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .timer-ms {
+    font-size: clamp(22px, 8vw, 54px);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -1px;
+    vertical-align: baseline;
+  }
+  @media (orientation: landscape) {
+    .timer-ms { font-size: clamp(22px, 12vh, 70px); }
+  }
 
-  /* Progress strip */
-  .tappa-strip { background: var(--surface); border-top: 1px solid var(--border); padding: 10px 12px; display: flex; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-shrink: 0; }
+  .timer-target { font-size: 13px; color: var(--muted); flex-shrink: 0; }
+
+  .tap-hint { font-size: 12px; color: var(--muted); flex-shrink: 0; transition: color 0.15s; }
+  .tap-hint.warn { color: var(--accent); font-weight: 600; }
+
+  /* Strip */
+  .tappa-strip { background: var(--surface); border-top: 1px solid var(--border); padding: 8px 12px; display: flex; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-shrink: 0; }
   .tappa-strip::-webkit-scrollbar { display: none; }
-  .strip-item { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 52px; flex-shrink: 0; }
-  .strip-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; border: 2px solid transparent; }
+  .strip-item { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 48px; flex-shrink: 0; }
+  .strip-dot { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; border: 2px solid transparent; }
   .dot-done { background: var(--green); color: #000; }
   .dot-active { background: var(--accent); color: #fff; border-color: #fff; }
   .dot-future { background: var(--surface2); color: var(--muted); border-color: var(--border); }
-  .strip-name { font-size: 10px; color: var(--muted); text-align: center; max-width: 52px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .strip-name { font-size: 10px; color: var(--muted); text-align: center; max-width: 48px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  /* Bottom tap zone */
-  .tap-zone { background: var(--surface); border-top: 1px solid var(--border); padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; }
-  .tap-btn { width: 100%; background: var(--accent); border: none; border-radius: 14px; color: #fff; font-size: 17px; font-weight: 600; padding: 18px; cursor: pointer; letter-spacing: 0.3px; }
+  /* Bottom */
+  .tap-zone { background: var(--surface); border-top: 1px solid var(--border); padding: 12px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; }
+  .tap-btn { width: 100%; background: var(--accent); border: none; border-radius: 14px; color: #fff; font-size: 17px; font-weight: 600; padding: 16px; cursor: pointer; letter-spacing: 0.3px; }
   .tap-btn:active { opacity: 0.85; transform: scale(0.99); }
   .tap-btn.btn-done { background: var(--surface2); color: var(--muted); }
-  .tap-btn.btn-red { background: #7f1d1d; color: var(--red); }
-
-  .back-btn { background: none; border: 1px solid var(--border); border-radius: 10px; color: var(--muted); font-size: 13px; padding: 8px 16px; cursor: pointer; }
+  .back-btn { background: none; border: 1px solid var(--border); border-radius: 10px; color: var(--muted); font-size: 13px; padding: 7px 16px; cursor: pointer; }
   .back-btn:active { opacity: 0.7; }
 
-  /* Landscape tweaks */
   @media (orientation: landscape) and (max-height: 500px) {
-    .race-header { padding: 6px 16px; }
-    .timer-display { font-size: clamp(48px, 12vh, 80px); }
-    .tap-zone { padding: 10px 16px; gap: 6px; }
-    .tap-btn { padding: 14px; font-size: 16px; }
-    .tappa-strip { padding: 6px 10px; }
-    .strip-dot { width: 24px; height: 24px; font-size: 11px; }
+    .race-header { padding: 5px 14px; }
+    .race-header .race-tappa-name { font-size: 14px; }
+    .tappa-strip { padding: 5px 10px; }
+    .strip-dot { width: 22px; height: 22px; font-size: 10px; }
+    .tap-zone { padding: 8px 16px; gap: 6px; }
+    .tap-btn { padding: 11px; font-size: 15px; }
+    .back-btn { padding: 5px 12px; font-size: 12px; }
   }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ SETUP SCREEN ═══════════════ -->
+<!-- ═══ SETUP ═══ -->
 <div id="setup-screen">
   <div class="screen-title">🏁 ASI Regolarità</div>
   <div class="screen-sub">Imposta le tappe e i tempi</div>
-
   <div id="tappe-list"></div>
-
   <button class="add-btn" onclick="addTappa()">+ Aggiungi tappa</button>
   <button class="start-btn" onclick="startRace()">Avvia gara</button>
 </div>
 
-<!-- ═══════════════ RACE SCREEN ═══════════════ -->
+<!-- ═══ RACE ═══ -->
 <div id="race-screen">
   <div class="race-header">
     <div class="race-header-left">
@@ -127,28 +172,66 @@
     <span class="race-progress" id="cur-progress"></span>
   </div>
 
-  <div class="timer-area" id="timer-area" onclick="nextTappa()">
+  <div class="timer-area" id="timer-area">
+    <div class="dtap-ring" id="dtap-ring"></div>
     <span class="timer-phase" id="timer-phase">Pronto</span>
     <div class="timer-display" id="timer-display">00:00</div>
     <div class="timer-target" id="timer-target"></div>
-    <div class="tap-hint" id="tap-hint">Tocca per avanzare</div>
+    <div class="tap-hint" id="tap-hint">Doppio tap per avanzare</div>
   </div>
 
   <div class="tappa-strip" id="tappa-strip"></div>
 
   <div class="tap-zone">
-    <button class="tap-btn" id="main-tap-btn" onclick="nextTappa()">▶ Tappa successiva</button>
+    <button class="tap-btn" id="main-tap-btn">▶ Tappa successiva</button>
     <button class="back-btn" onclick="goSetup()">← Modifica tappe</button>
   </div>
 </div>
 
 <script>
+const STORAGE_KEY = 'asi_tappe_v1';
+const DTAP_MS = 380;
+
 let tappe = [];
 let tappaCount = 0;
 let currentIdx = -1;
-let interval = null;
+let rafId = null;
+let startTime = null;
 let elapsed = 0;
-let running = false;
+let finished = false;
+let firstTapAt = 0;
+let hintResetTimer = null;
+
+/* ══════ STORAGE ══════ */
+
+function saveTappe() {
+  try {
+    const rows = document.querySelectorAll('.tappa-row');
+    const data = [];
+    rows.forEach(row => {
+      const id = row.id.replace('tappa-row-', '');
+      data.push({
+        name: document.getElementById('name-' + id).value,
+        mm:   document.getElementById('mm-' + id).value,
+        ss:   document.getElementById('ss-' + id).value
+      });
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
+
+function loadSavedTappe() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    if (!Array.isArray(data) || data.length === 0) return false;
+    data.forEach(t => addTappa(t.name || '', t.mm || '', t.ss || ''));
+    return true;
+  } catch(e) { return false; }
+}
+
+/* ══════ SETUP ══════ */
 
 function addTappa(name = '', mm = '', ss = '') {
   tappaCount++;
@@ -167,49 +250,51 @@ function addTappa(name = '', mm = '', ss = '') {
     <button class="del-btn" onclick="removeTappa(${id})">✕</button>
   `;
   document.getElementById('tappe-list').appendChild(div);
+  div.addEventListener('input', saveTappe);
 }
 
 function removeTappa(id) {
   const el = document.getElementById('tappa-row-' + id);
   if (el) el.remove();
   renumberTappe();
+  saveTappe();
 }
 
 function renumberTappe() {
-  const rows = document.querySelectorAll('.tappa-row');
-  rows.forEach((r, i) => {
+  document.querySelectorAll('.tappa-row').forEach((r, i) => {
     r.querySelector('.tappa-num').textContent = '#' + (i + 1);
   });
 }
 
 function getTappeFromForm() {
-  const rows = document.querySelectorAll('.tappa-row');
   const result = [];
-  rows.forEach(row => {
+  document.querySelectorAll('.tappa-row').forEach(row => {
     const id = row.id.replace('tappa-row-', '');
     const name = document.getElementById('name-' + id).value.trim() || ('Tappa ' + (result.length + 1));
     const mm = parseInt(document.getElementById('mm-' + id).value) || 0;
     const ss = parseInt(document.getElementById('ss-' + id).value) || 0;
-    const totalSec = mm * 60 + ss;
-    result.push({ name, totalSec });
+    result.push({ name, totalMs: (mm * 60 + ss) * 1000 });
   });
   return result;
 }
 
 function startRace() {
+  saveTappe();
   tappe = getTappeFromForm();
   if (tappe.length === 0) { alert('Aggiungi almeno una tappa!'); return; }
   for (const t of tappe) {
-    if (t.totalSec <= 0) { alert('Imposta un tempo valido per ogni tappa.'); return; }
+    if (t.totalMs <= 0) { alert('Imposta un tempo valido per ogni tappa.'); return; }
   }
-
   document.getElementById('setup-screen').style.display = 'none';
   document.getElementById('race-screen').style.display = 'flex';
-
+  finished = false;
+  firstTapAt = 0;
   currentIdx = -1;
   buildStrip();
   nextTappa();
 }
+
+/* ══════ RACE ══════ */
 
 function buildStrip() {
   const strip = document.getElementById('tappa-strip');
@@ -217,10 +302,7 @@ function buildStrip() {
   tappe.forEach((t, i) => {
     const item = document.createElement('div');
     item.className = 'strip-item';
-    item.innerHTML = `
-      <div class="strip-dot dot-future" id="dot-${i}">${i + 1}</div>
-      <span class="strip-name">${t.name}</span>
-    `;
+    item.innerHTML = `<div class="strip-dot dot-future" id="dot-${i}">${i + 1}</div><span class="strip-name">${t.name}</span>`;
     strip.appendChild(item);
   });
 }
@@ -234,32 +316,78 @@ function updateStrip() {
   if (activeDot) activeDot.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
 }
 
-function nextTappa() {
-  if (currentIdx >= tappe.length - 1 && currentIdx !== -1) return;
+/* Doppio tap nell'area timer */
+document.getElementById('timer-area').addEventListener('click', function(e) {
+  if (finished) { goSetup(); return; }
 
-  stopTimer();
-  currentIdx++;
+  const now = Date.now();
+  const ring = document.getElementById('dtap-ring');
 
-  if (currentIdx >= tappe.length) {
-    showFinish();
-    return;
+  if (now - firstTapAt <= DTAP_MS) {
+    // ✓ Secondo tap — avanza
+    firstTapAt = 0;
+    clearTimeout(hintResetTimer);
+    ring.classList.remove('go');
+    nextTappa();
+  } else {
+    // Primo tap — feedback visivo
+    firstTapAt = now;
+
+    // Anello dove ha toccato
+    const rect = this.getBoundingClientRect();
+    ring.style.left = (e.clientX - rect.left - 55) + 'px';
+    ring.style.top  = (e.clientY - rect.top  - 55) + 'px';
+    ring.classList.remove('go');
+    void ring.offsetWidth;
+    ring.classList.add('go');
+
+    // Messaggio hint
+    const hint = document.getElementById('tap-hint');
+    hint.classList.add('warn');
+    hint.textContent = '▶▶ Ancora un tap!';
+
+    clearTimeout(hintResetTimer);
+    hintResetTimer = setTimeout(() => {
+      firstTapAt = 0;
+      hint.classList.remove('warn');
+      setHint();
+    }, DTAP_MS + 150);
   }
+});
+
+/* Singolo tap sul bottone */
+document.getElementById('main-tap-btn').addEventListener('click', function() {
+  if (finished) { goSetup(); return; }
+  firstTapAt = 0;
+  clearTimeout(hintResetTimer);
+  nextTappa();
+});
+
+function nextTappa() {
+  stopLoop();
+  currentIdx++;
+  if (currentIdx >= tappe.length) { showFinish(); return; }
+
+  if (navigator.vibrate) navigator.vibrate(30);
 
   elapsed = 0;
-  running = true;
+  startTime = performance.now();
+  finished = false;
+
   updateHeader();
   updateStrip();
-  updateDisplay();
-
-  interval = setInterval(() => {
-    elapsed++;
-    updateDisplay();
-  }, 1000);
+  setHint();
+  loop();
 }
 
-function stopTimer() {
-  if (interval) { clearInterval(interval); interval = null; }
-  running = false;
+function stopLoop() {
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+}
+
+function loop() {
+  if (startTime !== null) elapsed = performance.now() - startTime;
+  renderDisplay();
+  rafId = requestAnimationFrame(loop);
 }
 
 function updateHeader() {
@@ -268,24 +396,41 @@ function updateHeader() {
   document.getElementById('cur-progress').textContent = (currentIdx + 1) + ' / ' + tappe.length;
 }
 
-function updateDisplay() {
+function setHint() {
+  if (finished || currentIdx < 0 || currentIdx >= tappe.length) return;
+  const hint = document.getElementById('tap-hint');
+  hint.classList.remove('warn');
+  const isLast = currentIdx === tappe.length - 1;
+  hint.textContent = isLast ? 'Doppio tap per terminare' : 'Doppio tap • o usa il bottone';
+}
+
+function renderDisplay() {
   if (currentIdx < 0 || currentIdx >= tappe.length) return;
   const t = tappe[currentIdx];
-  const remaining = t.totalSec - elapsed;
+  const remaining = t.totalMs - elapsed;
   const isOver = remaining < 0;
-  const absVal = Math.abs(remaining);
-  const m = Math.floor(absVal / 60);
-  const s = absVal % 60;
-  const str = (isOver ? '+' : '') + pad(m) + ':' + pad(s);
+  const absMs = Math.abs(remaining);
+
+  const totalSec = Math.floor(absMs / 1000);
+  const mm = Math.floor(totalSec / 60);
+  const ss = totalSec % 60;
+  const cs = Math.floor((absMs % 1000) / 10);
 
   const disp = document.getElementById('timer-display');
   const phase = document.getElementById('timer-phase');
   const target = document.getElementById('timer-target');
-  const hint = document.getElementById('tap-hint');
   const btn = document.getElementById('main-tap-btn');
 
-  disp.textContent = str;
-  target.textContent = 'Tempo tappa: ' + pad(Math.floor(t.totalSec / 60)) + ':' + pad(t.totalSec % 60);
+  let html;
+  if (mm === 0) {
+    html = (isOver ? '+' : '') + pad(ss) + '.<span class="timer-ms">' + pad(cs) + '</span>';
+  } else {
+    html = (isOver ? '+' : '') + pad(mm) + ':' + pad(ss);
+  }
+  disp.innerHTML = html;
+
+  const ts0 = Math.floor(t.totalMs / 1000);
+  target.textContent = 'Tempo tappa: ' + pad(Math.floor(ts0 / 60)) + ':' + pad(ts0 % 60);
 
   if (!isOver) {
     disp.className = 'timer-display display-green';
@@ -298,34 +443,26 @@ function updateDisplay() {
   }
 
   const isLast = currentIdx === tappe.length - 1;
-  if (isLast) {
-    hint.textContent = 'Ultima tappa';
-    btn.textContent = '🏁 Termina gara';
-    btn.className = 'tap-btn';
-  } else {
-    hint.textContent = 'Tocca per tappa successiva';
-    btn.textContent = '▶ Tappa successiva';
-    btn.className = 'tap-btn';
-  }
+  btn.textContent = isLast ? '🏁 Termina gara' : '▶ Tappa successiva';
+  btn.className = 'tap-btn';
 }
 
 function showFinish() {
-  stopTimer();
-  const disp = document.getElementById('timer-display');
-  const phase = document.getElementById('timer-phase');
-  const hint = document.getElementById('tap-hint');
-  const btn = document.getElementById('main-tap-btn');
-  const name = document.getElementById('cur-name');
+  stopLoop();
+  finished = true;
+  if (navigator.vibrate) navigator.vibrate([40, 80, 40]);
 
-  disp.textContent = '✓';
-  disp.className = 'timer-display display-done';
-  phase.textContent = 'Gara completata';
-  phase.className = 'timer-phase phase-done';
-  name.textContent = 'Fine gara';
-  hint.textContent = '';
-  btn.textContent = '← Nuova gara';
-  btn.className = 'tap-btn btn-done';
-  btn.onclick = goSetup;
+  document.getElementById('timer-display').innerHTML = '✓';
+  document.getElementById('timer-display').className = 'timer-display display-done';
+  document.getElementById('timer-phase').textContent = 'Gara completata';
+  document.getElementById('timer-phase').className = 'timer-phase phase-done';
+  document.getElementById('cur-name').textContent = 'Fine gara';
+  document.getElementById('timer-target').textContent = '';
+  const hint = document.getElementById('tap-hint');
+  hint.classList.remove('warn');
+  hint.textContent = 'Tocca per nuova gara';
+  document.getElementById('main-tap-btn').textContent = '← Nuova gara';
+  document.getElementById('main-tap-btn').className = 'tap-btn btn-done';
   document.getElementById('cur-progress').textContent = tappe.length + ' / ' + tappe.length;
 
   tappe.forEach((_, i) => {
@@ -335,19 +472,22 @@ function showFinish() {
 }
 
 function goSetup() {
-  stopTimer();
+  stopLoop();
+  finished = false;
+  firstTapAt = 0;
   currentIdx = -1;
   document.getElementById('race-screen').style.display = 'none';
   document.getElementById('setup-screen').style.display = 'flex';
-  document.getElementById('main-tap-btn').onclick = nextTappa;
 }
 
 function pad(n) { return String(n).padStart(2, '0'); }
 
-// ─── Init: 3 tappe default ───
-addTappa('Partenza', '5', '0');
-addTappa('Checkpoint 1', '8', '30');
-addTappa('Arrivo', '6', '0');
+/* ══════ INIT ══════ */
+if (!loadSavedTappe()) {
+  addTappa('Partenza', '5', '0');
+  addTappa('Checkpoint 1', '0', '45');
+  addTappa('Arrivo', '6', '0');
+}
 </script>
 </body>
 </html>
