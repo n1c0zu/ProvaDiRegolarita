@@ -21,7 +21,6 @@
 
   html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overflow-x: hidden; }
 
-  /* ─── SETUP ─── */
   #setup-screen { display: flex; flex-direction: column; min-height: 100vh; padding: 16px; gap: 12px; }
   .screen-title { font-size: 20px; font-weight: 600; text-align: center; padding: 8px 0 4px; letter-spacing: 0.5px; }
   .screen-sub { font-size: 13px; color: var(--muted); text-align: center; margin-top: -4px; margin-bottom: 4px; }
@@ -43,7 +42,6 @@
   .start-btn { background: var(--accent); border: none; border-radius: 14px; color: #fff; font-size: 18px; font-weight: 600; padding: 18px; cursor: pointer; width: 100%; margin-top: auto; letter-spacing: 0.3px; }
   .start-btn:active { opacity: 0.85; transform: scale(0.99); }
 
-  /* ─── RACE ─── */
   #race-screen { display: none; flex-direction: column; height: 100vh; overflow: hidden; }
 
   .race-header { padding: 10px 16px 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
@@ -67,7 +65,14 @@
     padding: 8px 12px;
   }
 
-  /* Anello feedback primo tap */
+  .timer-area.waiting-start .timer-display {
+    animation: pulse-wait 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse-wait {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.35; }
+  }
+
   .dtap-ring {
     position: absolute;
     width: 110px; height: 110px;
@@ -77,18 +82,17 @@
     pointer-events: none;
     transform: scale(0.4);
   }
-  .dtap-ring.go {
-    animation: dtap 0.45s ease-out forwards;
-  }
+  .dtap-ring.go { animation: dtap 0.45s ease-out forwards; }
   @keyframes dtap {
     0%   { opacity: 0.9; transform: scale(0.4); }
     100% { opacity: 0;   transform: scale(1.5); }
   }
 
   .timer-phase { font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 500; flex-shrink: 0; }
+  .phase-ready     { color: var(--accent); }
   .phase-countdown { color: var(--green); }
-  .phase-overtime { color: var(--red); }
-  .phase-done { color: var(--muted); }
+  .phase-overtime  { color: var(--red); }
+  .phase-done      { color: var(--muted); }
 
   .timer-display {
     font-weight: 700;
@@ -102,9 +106,10 @@
     .timer-display { font-size: clamp(48px, 28vh, 160px); }
   }
 
-  .display-green { color: var(--green); }
-  .display-red { color: var(--red); }
-  .display-done { color: var(--muted); }
+  .display-accent { color: var(--accent); }
+  .display-green  { color: var(--green); }
+  .display-red    { color: var(--red); }
+  .display-done   { color: var(--muted); }
 
   .timer-ms {
     font-size: clamp(22px, 8vw, 54px);
@@ -118,21 +123,18 @@
   }
 
   .timer-target { font-size: 13px; color: var(--muted); flex-shrink: 0; }
-
   .tap-hint { font-size: 12px; color: var(--muted); flex-shrink: 0; transition: color 0.15s; }
   .tap-hint.warn { color: var(--accent); font-weight: 600; }
 
-  /* Strip */
   .tappa-strip { background: var(--surface); border-top: 1px solid var(--border); padding: 8px 12px; display: flex; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-shrink: 0; }
   .tappa-strip::-webkit-scrollbar { display: none; }
   .strip-item { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 48px; flex-shrink: 0; }
   .strip-dot { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; border: 2px solid transparent; }
-  .dot-done { background: var(--green); color: #000; }
-  .dot-active { background: var(--accent); color: #fff; border-color: #fff; }
+  .dot-done   { background: var(--green);    color: #000; }
+  .dot-active { background: var(--accent);   color: #fff; border-color: #fff; }
   .dot-future { background: var(--surface2); color: var(--muted); border-color: var(--border); }
   .strip-name { font-size: 10px; color: var(--muted); text-align: center; max-width: 48px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  /* Bottom */
   .tap-zone { background: var(--surface); border-top: 1px solid var(--border); padding: 12px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; }
   .tap-btn { width: 100%; background: var(--accent); border: none; border-radius: 14px; color: #fff; font-size: 17px; font-weight: 600; padding: 16px; cursor: pointer; letter-spacing: 0.3px; }
   .tap-btn:active { opacity: 0.85; transform: scale(0.99); }
@@ -140,9 +142,26 @@
   .back-btn { background: none; border: 1px solid var(--border); border-radius: 10px; color: var(--muted); font-size: 13px; padding: 7px 16px; cursor: pointer; }
   .back-btn:active { opacity: 0.7; }
 
+
+  /* ─── LIVE DELTA ─── */
+  .live-delta { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; flex-shrink: 0; min-height: 28px; }
+  .delta-pos  { color: var(--green); }
+  .delta-neg  { color: var(--red); }
+  .delta-zero { color: var(--muted); }
+
+  /* ─── RESULTS ─── */
+  #results-screen { position: absolute; inset: 0; background: var(--bg); flex-direction: column; overflow-y: auto; padding: 16px; gap: 14px; z-index: 10; }
+  .res-row { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+  .res-row-header { display: flex; align-items: center; justify-content: space-between; }
+  .res-name { font-size: 14px; font-weight: 600; }
+  .res-delta-big { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .res-detail { display: flex; gap: 14px; font-size: 12px; color: var(--muted); }
+  .res-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .res-summary-row { display: flex; justify-content: space-between; font-size: 14px; }
+  .res-summary-row span:last-child { font-weight: 600; }
+
   @media (orientation: landscape) and (max-height: 500px) {
     .race-header { padding: 5px 14px; }
-    .race-header .race-tappa-name { font-size: 14px; }
     .tappa-strip { padding: 5px 10px; }
     .strip-dot { width: 22px; height: 22px; font-size: 10px; }
     .tap-zone { padding: 8px 16px; gap: 6px; }
@@ -153,7 +172,6 @@
 </head>
 <body>
 
-<!-- ═══ SETUP ═══ -->
 <div id="setup-screen">
   <div class="screen-title">🏁 ASI Regolarità</div>
   <div class="screen-sub">Imposta le tappe e i tempi</div>
@@ -162,7 +180,6 @@
   <button class="start-btn" onclick="startRace()">Avvia gara</button>
 </div>
 
-<!-- ═══ RACE ═══ -->
 <div id="race-screen">
   <div class="race-header">
     <div class="race-header-left">
@@ -177,13 +194,21 @@
     <span class="timer-phase" id="timer-phase">Pronto</span>
     <div class="timer-display" id="timer-display">00:00</div>
     <div class="timer-target" id="timer-target"></div>
-    <div class="tap-hint" id="tap-hint">Doppio tap per avanzare</div>
+    <div class="live-delta" id="live-delta"></div>
+    <div class="tap-hint" id="tap-hint">▶ Tap per iniziare</div>
+  </div>
+
+  <div id="results-screen" style="display:none;">
+    <div class="screen-title" style="padding-bottom:4px;">📊 Risultati gara</div>
+    <div id="results-list"></div>
+    <div class="res-summary" id="results-summary"></div>
+    <button class="start-btn" onclick="goSetup()">← Nuova gara</button>
   </div>
 
   <div class="tappa-strip" id="tappa-strip"></div>
 
   <div class="tap-zone">
-    <button class="tap-btn" id="main-tap-btn">▶ Tappa successiva</button>
+    <button class="tap-btn" id="main-tap-btn">▶ Avvia tappa</button>
     <button class="back-btn" onclick="goSetup()">← Modifica tappe</button>
   </div>
 </div>
@@ -199,8 +224,60 @@ let rafId = null;
 let startTime = null;
 let elapsed = 0;
 let finished = false;
+let waitingForStart = false;
 let firstTapAt = 0;
 let hintResetTimer = null;
+let tapResults = []; // {name, targetMs, elapsedMs, deltaMs}
+
+/* ══════ AUDIO ══════ */
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+// Beep generico: freq Hz, durata ms, tipo onda, volume
+function beep(freq, durationMs, type = 'sine', gain = 0.4) {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const vol = ctx.createGain();
+    osc.connect(vol);
+    vol.connect(ctx.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    vol.gain.setValueAtTime(gain, ctx.currentTime);
+    vol.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + durationMs / 1000);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + durationMs / 1000);
+  } catch(e) {}
+}
+
+// Tick countdown: tono scende con il tempo rimasto
+// remainingSec: secondi rimasti (da totalMs della tappa)
+// Mappa: tempo pieno = 880Hz, 0 = 300Hz
+function soundTick(remainingSec, totalSec) {
+  const t = totalSec > 0 ? Math.max(0, Math.min(1, remainingSec / totalSec)) : 0;
+  const freq = 600 + t * 580; // 600Hz..1180Hz
+  beep(freq, 80, 'sine', 0.32);
+}
+// Suono allo zero: doppio beep neutro
+function soundZero() {
+  beep(1320, 120, 'sine', 0.55);
+  setTimeout(() => beep(1320, 180, 'sine', 0.55), 140);
+}
+// Tick in negativo: tono sale ogni secondo (più ritardo = più alto)
+// overSec: secondi di ritardo (1, 2, 3...)
+function soundOverTick(overSec) {
+  const freq = 320 + Math.min(overSec, 20) * 40; // 360Hz..1120Hz
+  beep(freq, 100, 'sawtooth', 0.22);
+}
+
+// Tracciamento secondi già suonati
+let lastTickSecond = -1;   // secondo del countdown già suonato
+let lastOverSecond = -1;   // secondo negativo già suonato
+let zeroSounded    = false;
 
 /* ══════ STORAGE ══════ */
 
@@ -289,9 +366,11 @@ function startRace() {
   document.getElementById('race-screen').style.display = 'flex';
   finished = false;
   firstTapAt = 0;
+  clearTimeout(hintResetTimer);
   currentIdx = -1;
+  tapResults = [];
   buildStrip();
-  nextTappa();
+  prepareNextTappa();
 }
 
 /* ══════ RACE ══════ */
@@ -302,7 +381,7 @@ function buildStrip() {
   tappe.forEach((t, i) => {
     const item = document.createElement('div');
     item.className = 'strip-item';
-    item.innerHTML = `<div class="strip-dot dot-future" id="dot-${i}">${i + 1}</div><span class="strip-name">${t.name}</span>`;
+    item.innerHTML = `<div class="strip-dot dot-future" id="dot-${i}">${i+1}</div><span class="strip-name">${t.name}</span>`;
     strip.appendChild(item);
   });
 }
@@ -316,24 +395,97 @@ function updateStrip() {
   if (activeDot) activeDot.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
 }
 
-/* Doppio tap nell'area timer */
+/* Mostra la tappa pronta — timer FERMO, aspetta tap */
+function prepareNextTappa() {
+  // Salva risultato tappa precedente
+  if (currentIdx >= 0 && currentIdx < tappe.length) {
+    const prev = tappe[currentIdx];
+    const deltaMs = elapsed - prev.totalMs; // positivo = in ritardo, negativo = in anticipo
+    tapResults.push({ name: prev.name, targetMs: prev.totalMs, elapsedMs: elapsed, deltaMs });
+  }
+
+  stopLoop();
+  firstTapAt = 0;
+  clearTimeout(hintResetTimer);
+
+  currentIdx++;
+  if (currentIdx >= tappe.length) { showFinish(); return; }
+
+  // Solo la prima tappa aspetta il tap — le successive partono subito
+  waitingForStart = (currentIdx === 0);
+  elapsed = 0;
+  startTime = null;
+  finished = false;
+
+  updateHeader();
+  updateStrip();
+
+  if (waitingForStart) {
+    const t = tappe[currentIdx];
+    const ts0 = Math.floor(t.totalMs / 1000);
+    const mm0 = Math.floor(ts0 / 60);
+    const ss0 = ts0 % 60;
+
+    const disp = document.getElementById('timer-display');
+    disp.innerHTML = pad(mm0) + ':' + pad(ss0);
+    disp.className = 'timer-display display-accent';
+
+    document.getElementById('timer-phase').textContent = 'Pronto';
+    document.getElementById('timer-phase').className = 'timer-phase phase-ready';
+    document.getElementById('timer-target').textContent = 'Tempo tappa: ' + pad(mm0) + ':' + pad(ss0);
+
+    const hint = document.getElementById('tap-hint');
+    hint.classList.remove('warn');
+    hint.textContent = '▶ Tap per iniziare';
+
+    document.getElementById('timer-area').classList.add('waiting-start');
+
+    const btn = document.getElementById('main-tap-btn');
+    btn.textContent = '▶ Avvia gara';
+    btn.className = 'tap-btn';
+  } else {
+    // Tappe successive: parte subito
+    startCurrentTappa();
+  }
+}
+
+/* Avvia il cronometro della tappa corrente */
+function startCurrentTappa() {
+  waitingForStart = false;
+  document.getElementById('timer-area').classList.remove('waiting-start');
+  if (navigator.vibrate) navigator.vibrate(30);
+  // Reset sound state
+  lastTickSecond = -1;
+  lastOverSecond = -1;
+  zeroSounded = false;
+  elapsed = 0;
+  startTime = performance.now();
+  setHint();
+  loop();
+}
+
+/* ── Listener area timer ── */
 document.getElementById('timer-area').addEventListener('click', function(e) {
   if (finished) { goSetup(); return; }
 
+  // Stato "pronto": singolo tap avvia
+  if (waitingForStart) {
+    startCurrentTappa();
+    return;
+  }
+
+  // Timer in corso: doppio tap per avanzare
   const now = Date.now();
   const ring = document.getElementById('dtap-ring');
 
-  if (now - firstTapAt <= DTAP_MS) {
-    // ✓ Secondo tap — avanza
+  if (firstTapAt > 0 && now - firstTapAt <= DTAP_MS) {
     firstTapAt = 0;
     clearTimeout(hintResetTimer);
     ring.classList.remove('go');
-    nextTappa();
+    prepareNextTappa();
   } else {
-    // Primo tap — feedback visivo
     firstTapAt = now;
 
-    // Anello dove ha toccato
     const rect = this.getBoundingClientRect();
     ring.style.left = (e.clientX - rect.left - 55) + 'px';
     ring.style.top  = (e.clientY - rect.top  - 55) + 'px';
@@ -341,7 +493,6 @@ document.getElementById('timer-area').addEventListener('click', function(e) {
     void ring.offsetWidth;
     ring.classList.add('go');
 
-    // Messaggio hint
     const hint = document.getElementById('tap-hint');
     hint.classList.add('warn');
     hint.textContent = '▶▶ Ancora un tap!';
@@ -355,30 +506,14 @@ document.getElementById('timer-area').addEventListener('click', function(e) {
   }
 });
 
-/* Singolo tap sul bottone */
+/* ── Bottone in basso ── */
 document.getElementById('main-tap-btn').addEventListener('click', function() {
   if (finished) { goSetup(); return; }
+  if (waitingForStart) { startCurrentTappa(); return; }
   firstTapAt = 0;
   clearTimeout(hintResetTimer);
-  nextTappa();
+  prepareNextTappa();
 });
-
-function nextTappa() {
-  stopLoop();
-  currentIdx++;
-  if (currentIdx >= tappe.length) { showFinish(); return; }
-
-  if (navigator.vibrate) navigator.vibrate(30);
-
-  elapsed = 0;
-  startTime = performance.now();
-  finished = false;
-
-  updateHeader();
-  updateStrip();
-  setHint();
-  loop();
-}
 
 function stopLoop() {
   if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
@@ -436,10 +571,30 @@ function renderDisplay() {
     disp.className = 'timer-display display-green';
     phase.textContent = 'Countdown';
     phase.className = 'timer-phase phase-countdown';
+
+    // Tick ogni secondo
+    if (lastTickSecond !== totalSec && elapsed > 1000) {
+      lastTickSecond = totalSec;
+      const totalTappaSec = Math.floor(t.totalMs / 1000);
+      soundTick(totalSec, totalTappaSec);
+    }
+
+    // Suono zero anticipato di 250ms
+    if (!zeroSounded && remaining <= 250) {
+      zeroSounded = true;
+      soundZero();
+    }
+
   } else {
     disp.className = 'timer-display display-red';
     phase.textContent = 'Fuori tempo';
     phase.className = 'timer-phase phase-overtime';
+
+    // Tick ogni secondo in negativo
+    if (lastOverSecond !== totalSec) {
+      lastOverSecond = totalSec;
+      if (totalSec > 0) soundOverTick(totalSec);
+    }
   }
 
   const isLast = currentIdx === tappe.length - 1;
@@ -447,42 +602,84 @@ function renderDisplay() {
   btn.className = 'tap-btn';
 }
 
+function fmtDelta(dMs) {
+  const sign = dMs > 0 ? '+' : dMs < 0 ? '-' : '±';
+  const abs  = Math.abs(dMs);
+  const sec  = Math.floor(abs / 1000);
+  const cs   = Math.floor((abs % 1000) / 10);
+  const mm   = Math.floor(sec / 60);
+  const ss   = sec % 60;
+  if (mm > 0) return sign + pad(mm) + ':' + pad(ss);
+  return sign + pad(ss) + '.' + pad(cs);
+}
+
 function showFinish() {
+  // Salva risultato ultima tappa
+  if (currentIdx >= 0 && currentIdx < tappe.length) {
+    const prev = tappe[currentIdx];
+    tapResults.push({ name: prev.name, targetMs: prev.totalMs, elapsedMs: elapsed, deltaMs: elapsed - prev.totalMs });
+  }
+
   stopLoop();
   finished = true;
+  waitingForStart = false;
+  document.getElementById('timer-area').classList.remove('waiting-start');
   if (navigator.vibrate) navigator.vibrate([40, 80, 40]);
 
-  document.getElementById('timer-display').innerHTML = '✓';
-  document.getElementById('timer-display').className = 'timer-display display-done';
-  document.getElementById('timer-phase').textContent = 'Gara completata';
-  document.getElementById('timer-phase').className = 'timer-phase phase-done';
-  document.getElementById('cur-name').textContent = 'Fine gara';
-  document.getElementById('timer-target').textContent = '';
-  const hint = document.getElementById('tap-hint');
-  hint.classList.remove('warn');
-  hint.textContent = 'Tocca per nuova gara';
-  document.getElementById('main-tap-btn').textContent = '← Nuova gara';
-  document.getElementById('main-tap-btn').className = 'tap-btn btn-done';
-  document.getElementById('cur-progress').textContent = tappe.length + ' / ' + tappe.length;
-
-  tappe.forEach((_, i) => {
-    const dot = document.getElementById('dot-' + i);
-    if (dot) dot.className = 'strip-dot dot-done';
+  // Costruisci schermata risultati
+  const list = document.getElementById('results-list');
+  list.innerHTML = '';
+  let totalDelta = 0;
+  let totalAbs   = 0;
+  tapResults.forEach((r, i) => {
+    totalDelta += r.deltaMs;
+    totalAbs   += Math.abs(r.deltaMs);
+    const cls = r.deltaMs < -50 ? 'delta-pos' : r.deltaMs > 50 ? 'delta-neg' : 'delta-zero';
+    const tSec = Math.floor(r.targetMs / 1000);
+    const tCs  = Math.floor((r.targetMs % 1000) / 10);
+    const eSec = Math.floor(r.elapsedMs / 1000);
+    const eCs  = Math.floor((r.elapsedMs % 1000) / 10);
+    const div = document.createElement('div');
+    div.className = 'res-row';
+    div.innerHTML = `
+      <div class="res-row-header">
+        <span class="res-name">#${i+1} ${r.name}</span>
+        <span class="res-delta-big ${cls}">${fmtDelta(r.deltaMs)}</span>
+      </div>
+      <div class="res-detail">
+        <span>Target: ${pad(Math.floor(tSec/60))}:${pad(tSec%60)}.${pad(tCs)}</span>
+        <span>Effettivo: ${pad(Math.floor(eSec/60))}:${pad(eSec%60)}.${pad(eCs)}</span>
+      </div>`;
+    list.appendChild(div);
   });
+
+  // Summary
+  const sumCls = 'delta-neg';
+  const avgAbs = tapResults.length ? totalAbs / tapResults.length : 0;
+  document.getElementById('results-summary').innerHTML = `
+    <div class="res-summary-row"><span>Errore totale</span><span class="${sumCls}">${fmtDelta(totalAbs)}</span></div>
+    <div class="res-summary-row"><span>Errore medio per tappa</span><span>${fmtDelta(Math.round(avgAbs))}</span></div>
+    <div class="res-summary-row"><span>Tappe completate</span><span>${tapResults.length} / ${tappe.length}</span></div>
+  `;
+
+  document.getElementById('results-screen').style.display = 'flex';
 }
 
 function goSetup() {
   stopLoop();
   finished = false;
+  waitingForStart = false;
   firstTapAt = 0;
+  clearTimeout(hintResetTimer);
   currentIdx = -1;
+  document.getElementById('timer-area').classList.remove('waiting-start');
   document.getElementById('race-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'none';
   document.getElementById('setup-screen').style.display = 'flex';
 }
 
 function pad(n) { return String(n).padStart(2, '0'); }
 
-/* ══════ INIT ══════ */
 if (!loadSavedTappe()) {
   addTappa('Partenza', '5', '0');
   addTappa('Checkpoint 1', '0', '45');
