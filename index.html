@@ -489,7 +489,7 @@
     .tap-btn { padding: 14px 10px; font-size: 14px; }
   }
 </style>
-<style id="modern-theme" disabled>
+<style id="modern-theme" media="none">
   :root {
     --bg: #0f0f0f !important;
     --win: #1a1a1a !important;
@@ -1043,7 +1043,7 @@ function goSetup() {
 function pad(n) { return String(n).padStart(2, '0'); }
 
 /* ══════ THEME ══════ */
-let modernTheme = false;
+let modernTheme = true;  // Win98 è il default
 function toggleTheme() {
   modernTheme = !modernTheme;
   applyTheme();
@@ -1052,9 +1052,9 @@ function toggleTheme() {
 
 function applyTheme() {
   const sheet = document.getElementById('modern-theme');
-  sheet.disabled = !modernTheme;
-  document.getElementById('theme-btn').textContent = modernTheme ? '[T] Win98' : '[T] Tema';
-  document.body.style.background = modernTheme ? '#0f0f0f' : '';
+  sheet.media = modernTheme ? 'none' : 'all';
+  document.getElementById('theme-btn').textContent = modernTheme ? '[T] Moderno' : '[T] Win98';
+  document.body.style.background = modernTheme ? '' : '#0f0f0f';
 }
 
 if (!loadSavedTappe()) {
@@ -1063,13 +1063,12 @@ if (!loadSavedTappe()) {
   addTappa('Arrivo', '6', '0');
 }
 
-// Restore theme
+// Restore theme — default Win98 (1), moderno = 0
 try {
-  if (localStorage.getItem('asi_theme') === '1') {
-    modernTheme = true;
-    applyTheme();
-  }
+  const saved = localStorage.getItem('asi_theme');
+  modernTheme = saved === null ? true : saved === '1';
 } catch(e) {}
+applyTheme();
 </script>
 </body>
 </html>
