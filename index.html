@@ -1046,6 +1046,11 @@ function pad(n) { return String(n).padStart(2, '0'); }
 let modernTheme = false;
 function toggleTheme() {
   modernTheme = !modernTheme;
+  applyTheme();
+  try { localStorage.setItem('asi_theme', modernTheme ? '1' : '0'); } catch(e) {}
+}
+
+function applyTheme() {
   const sheet = document.getElementById('modern-theme');
   sheet.disabled = !modernTheme;
   document.getElementById('theme-btn').textContent = modernTheme ? '[T] Win98' : '[T] Tema';
@@ -1057,6 +1062,14 @@ if (!loadSavedTappe()) {
   addTappa('Checkpoint 1', '0', '45');
   addTappa('Arrivo', '6', '0');
 }
+
+// Restore theme
+try {
+  if (localStorage.getItem('asi_theme') === '1') {
+    modernTheme = true;
+    applyTheme();
+  }
+} catch(e) {}
 </script>
 </body>
 </html>
