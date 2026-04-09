@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>ASI Regolarità</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #242424;
+    --border: rgba(255,255,255,0.1);
+    --text: #f0f0f0;
+    --muted: #888;
+    --green: #22c55e;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --blue: #3b82f6;
+    --accent: #6366f1;
+  }
+
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overflow-x: hidden; }
+
+  /* ─── SETUP SCREEN ─── */
+  #setup-screen { display: flex; flex-direction: column; min-height: 100vh; padding: 16px; gap: 12px; }
+
+  .screen-title { font-size: 20px; font-weight: 600; text-align: center; padding: 8px 0 4px; letter-spacing: 0.5px; }
+  .screen-sub { font-size: 13px; color: var(--muted); text-align: center; margin-top: -4px; margin-bottom: 4px; }
+
+  .tappa-row { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
+  .tappa-num { font-size: 13px; color: var(--muted); min-width: 24px; }
+  .tappa-name-input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; padding: 8px 10px; outline: none; }
+  .tappa-name-input:focus { border-color: var(--accent); }
+  .time-input-wrap { display: flex; align-items: center; gap: 4px; }
+  .time-num { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; padding: 8px 0; text-align: center; outline: none; }
+  .time-num:focus { border-color: var(--accent); }
+  .time-mm { width: 44px; }
+  .time-ss { width: 44px; }
+  .time-sep { color: var(--muted); font-size: 18px; font-weight: 700; }
+  .del-btn { background: none; border: none; color: var(--red); font-size: 20px; cursor: pointer; padding: 4px 6px; border-radius: 6px; line-height: 1; }
+
+  .add-btn { background: var(--surface2); border: 1px dashed var(--border); border-radius: 12px; color: var(--accent); font-size: 15px; font-weight: 500; padding: 14px; cursor: pointer; text-align: center; width: 100%; }
+  .add-btn:active { opacity: 0.7; }
+
+  .start-btn { background: var(--accent); border: none; border-radius: 14px; color: #fff; font-size: 18px; font-weight: 600; padding: 18px; cursor: pointer; width: 100%; margin-top: auto; letter-spacing: 0.3px; }
+  .start-btn:active { opacity: 0.85; transform: scale(0.99); }
+
+  /* ─── RACE SCREEN ─── */
+  #race-screen { display: none; flex-direction: column; height: 100vh; padding: 0; overflow: hidden; }
+
+  .race-header { padding: 10px 16px 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .race-header-left { display: flex; flex-direction: column; }
+  .race-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .race-tappa-name { font-size: 16px; font-weight: 600; }
+  .race-progress { font-size: 13px; color: var(--muted); }
+
+  /* Big timer */
+  .timer-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; user-select: none; background: var(--bg); }
+  .timer-area:active { background: rgba(255,255,255,0.02); }
+
+  .timer-phase { font-size: 13px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 500; }
+  .phase-countdown { color: var(--green); }
+  .phase-overtime { color: var(--red); }
+  .phase-done { color: var(--muted); }
+
+  .timer-display { font-size: clamp(64px, 18vw, 100px); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -2px; line-height: 1; }
+  .display-green { color: var(--green); }
+  .display-red { color: var(--red); }
+  .display-done { color: var(--muted); }
+
+  .timer-target { font-size: 14px; color: var(--muted); }
+  .tap-hint { font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+  /* Progress strip */
+  .tappa-strip { background: var(--surface); border-top: 1px solid var(--border); padding: 10px 12px; display: flex; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-shrink: 0; }
+  .tappa-strip::-webkit-scrollbar { display: none; }
+  .strip-item { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 52px; flex-shrink: 0; }
+  .strip-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; border: 2px solid transparent; }
+  .dot-done { background: var(--green); color: #000; }
+  .dot-active { background: var(--accent); color: #fff; border-color: #fff; }
+  .dot-future { background: var(--surface2); color: var(--muted); border-color: var(--border); }
+  .strip-name { font-size: 10px; color: var(--muted); text-align: center; max-width: 52px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Bottom tap zone */
+  .tap-zone { background: var(--surface); border-top: 1px solid var(--border); padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; }
+  .tap-btn { width: 100%; background: var(--accent); border: none; border-radius: 14px; color: #fff; font-size: 17px; font-weight: 600; padding: 18px; cursor: pointer; letter-spacing: 0.3px; }
+  .tap-btn:active { opacity: 0.85; transform: scale(0.99); }
+  .tap-btn.btn-done { background: var(--surface2); color: var(--muted); }
+  .tap-btn.btn-red { background: #7f1d1d; color: var(--red); }
+
+  .back-btn { background: none; border: 1px solid var(--border); border-radius: 10px; color: var(--muted); font-size: 13px; padding: 8px 16px; cursor: pointer; }
+  .back-btn:active { opacity: 0.7; }
+
+  /* Landscape tweaks */
+  @media (orientation: landscape) and (max-height: 500px) {
+    .race-header { padding: 6px 16px; }
+    .timer-display { font-size: clamp(48px, 12vh, 80px); }
+    .tap-zone { padding: 10px 16px; gap: 6px; }
+    .tap-btn { padding: 14px; font-size: 16px; }
+    .tappa-strip { padding: 6px 10px; }
+    .strip-dot { width: 24px; height: 24px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ SETUP SCREEN ═══════════════ -->
+<div id="setup-screen">
+  <div class="screen-title">🏁 ASI Regolarità</div>
+  <div class="screen-sub">Imposta le tappe e i tempi</div>
+
+  <div id="tappe-list"></div>
+
+  <button class="add-btn" onclick="addTappa()">+ Aggiungi tappa</button>
+  <button class="start-btn" onclick="startRace()">Avvia gara</button>
+</div>
+
+<!-- ═══════════════ RACE SCREEN ═══════════════ -->
+<div id="race-screen">
+  <div class="race-header">
+    <div class="race-header-left">
+      <span class="race-label">Tappa in corso</span>
+      <span class="race-tappa-name" id="cur-name">—</span>
+    </div>
+    <span class="race-progress" id="cur-progress"></span>
+  </div>
+
+  <div class="timer-area" id="timer-area" onclick="nextTappa()">
+    <span class="timer-phase" id="timer-phase">Pronto</span>
+    <div class="timer-display" id="timer-display">00:00</div>
+    <div class="timer-target" id="timer-target"></div>
+    <div class="tap-hint" id="tap-hint">Tocca per avanzare</div>
+  </div>
+
+  <div class="tappa-strip" id="tappa-strip"></div>
+
+  <div class="tap-zone">
+    <button class="tap-btn" id="main-tap-btn" onclick="nextTappa()">▶ Tappa successiva</button>
+    <button class="back-btn" onclick="goSetup()">← Modifica tappe</button>
+  </div>
+</div>
+
+<script>
+let tappe = [];
+let tappaCount = 0;
+let currentIdx = -1;
+let interval = null;
+let elapsed = 0;
+let running = false;
+
+function addTappa(name = '', mm = '', ss = '') {
+  tappaCount++;
+  const id = tappaCount;
+  const div = document.createElement('div');
+  div.className = 'tappa-row';
+  div.id = 'tappa-row-' + id;
+  div.innerHTML = `
+    <span class="tappa-num">#${tappaCount}</span>
+    <input class="tappa-name-input" type="text" placeholder="Nome tappa" value="${name}" id="name-${id}">
+    <div class="time-input-wrap">
+      <input class="time-num time-mm" type="number" min="0" max="99" placeholder="mm" value="${mm}" id="mm-${id}" inputmode="numeric">
+      <span class="time-sep">:</span>
+      <input class="time-num time-ss" type="number" min="0" max="59" placeholder="ss" value="${ss}" id="ss-${id}" inputmode="numeric">
+    </div>
+    <button class="del-btn" onclick="removeTappa(${id})">✕</button>
+  `;
+  document.getElementById('tappe-list').appendChild(div);
+}
+
+function removeTappa(id) {
+  const el = document.getElementById('tappa-row-' + id);
+  if (el) el.remove();
+  renumberTappe();
+}
+
+function renumberTappe() {
+  const rows = document.querySelectorAll('.tappa-row');
+  rows.forEach((r, i) => {
+    r.querySelector('.tappa-num').textContent = '#' + (i + 1);
+  });
+}
+
+function getTappeFromForm() {
+  const rows = document.querySelectorAll('.tappa-row');
+  const result = [];
+  rows.forEach(row => {
+    const id = row.id.replace('tappa-row-', '');
+    const name = document.getElementById('name-' + id).value.trim() || ('Tappa ' + (result.length + 1));
+    const mm = parseInt(document.getElementById('mm-' + id).value) || 0;
+    const ss = parseInt(document.getElementById('ss-' + id).value) || 0;
+    const totalSec = mm * 60 + ss;
+    result.push({ name, totalSec });
+  });
+  return result;
+}
+
+function startRace() {
+  tappe = getTappeFromForm();
+  if (tappe.length === 0) { alert('Aggiungi almeno una tappa!'); return; }
+  for (const t of tappe) {
+    if (t.totalSec <= 0) { alert('Imposta un tempo valido per ogni tappa.'); return; }
+  }
+
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('race-screen').style.display = 'flex';
+
+  currentIdx = -1;
+  buildStrip();
+  nextTappa();
+}
+
+function buildStrip() {
+  const strip = document.getElementById('tappa-strip');
+  strip.innerHTML = '';
+  tappe.forEach((t, i) => {
+    const item = document.createElement('div');
+    item.className = 'strip-item';
+    item.innerHTML = `
+      <div class="strip-dot dot-future" id="dot-${i}">${i + 1}</div>
+      <span class="strip-name">${t.name}</span>
+    `;
+    strip.appendChild(item);
+  });
+}
+
+function updateStrip() {
+  tappe.forEach((_, i) => {
+    const dot = document.getElementById('dot-' + i);
+    dot.className = 'strip-dot ' + (i < currentIdx ? 'dot-done' : i === currentIdx ? 'dot-active' : 'dot-future');
+  });
+  const activeDot = document.getElementById('dot-' + currentIdx);
+  if (activeDot) activeDot.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+}
+
+function nextTappa() {
+  if (currentIdx >= tappe.length - 1 && currentIdx !== -1) return;
+
+  stopTimer();
+  currentIdx++;
+
+  if (currentIdx >= tappe.length) {
+    showFinish();
+    return;
+  }
+
+  elapsed = 0;
+  running = true;
+  updateHeader();
+  updateStrip();
+  updateDisplay();
+
+  interval = setInterval(() => {
+    elapsed++;
+    updateDisplay();
+  }, 1000);
+}
+
+function stopTimer() {
+  if (interval) { clearInterval(interval); interval = null; }
+  running = false;
+}
+
+function updateHeader() {
+  const t = tappe[currentIdx];
+  document.getElementById('cur-name').textContent = t.name;
+  document.getElementById('cur-progress').textContent = (currentIdx + 1) + ' / ' + tappe.length;
+}
+
+function updateDisplay() {
+  if (currentIdx < 0 || currentIdx >= tappe.length) return;
+  const t = tappe[currentIdx];
+  const remaining = t.totalSec - elapsed;
+  const isOver = remaining < 0;
+  const absVal = Math.abs(remaining);
+  const m = Math.floor(absVal / 60);
+  const s = absVal % 60;
+  const str = (isOver ? '+' : '') + pad(m) + ':' + pad(s);
+
+  const disp = document.getElementById('timer-display');
+  const phase = document.getElementById('timer-phase');
+  const target = document.getElementById('timer-target');
+  const hint = document.getElementById('tap-hint');
+  const btn = document.getElementById('main-tap-btn');
+
+  disp.textContent = str;
+  target.textContent = 'Tempo tappa: ' + pad(Math.floor(t.totalSec / 60)) + ':' + pad(t.totalSec % 60);
+
+  if (!isOver) {
+    disp.className = 'timer-display display-green';
+    phase.textContent = 'Countdown';
+    phase.className = 'timer-phase phase-countdown';
+  } else {
+    disp.className = 'timer-display display-red';
+    phase.textContent = 'Fuori tempo';
+    phase.className = 'timer-phase phase-overtime';
+  }
+
+  const isLast = currentIdx === tappe.length - 1;
+  if (isLast) {
+    hint.textContent = 'Ultima tappa';
+    btn.textContent = '🏁 Termina gara';
+    btn.className = 'tap-btn';
+  } else {
+    hint.textContent = 'Tocca per tappa successiva';
+    btn.textContent = '▶ Tappa successiva';
+    btn.className = 'tap-btn';
+  }
+}
+
+function showFinish() {
+  stopTimer();
+  const disp = document.getElementById('timer-display');
+  const phase = document.getElementById('timer-phase');
+  const hint = document.getElementById('tap-hint');
+  const btn = document.getElementById('main-tap-btn');
+  const name = document.getElementById('cur-name');
+
+  disp.textContent = '✓';
+  disp.className = 'timer-display display-done';
+  phase.textContent = 'Gara completata';
+  phase.className = 'timer-phase phase-done';
+  name.textContent = 'Fine gara';
+  hint.textContent = '';
+  btn.textContent = '← Nuova gara';
+  btn.className = 'tap-btn btn-done';
+  btn.onclick = goSetup;
+  document.getElementById('cur-progress').textContent = tappe.length + ' / ' + tappe.length;
+
+  tappe.forEach((_, i) => {
+    const dot = document.getElementById('dot-' + i);
+    if (dot) dot.className = 'strip-dot dot-done';
+  });
+}
+
+function goSetup() {
+  stopTimer();
+  currentIdx = -1;
+  document.getElementById('race-screen').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'flex';
+  document.getElementById('main-tap-btn').onclick = nextTappa;
+}
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+// ─── Init: 3 tappe default ───
+addTappa('Partenza', '5', '0');
+addTappa('Checkpoint 1', '8', '30');
+addTappa('Arrivo', '6', '0');
+</script>
+</body>
+</html>
