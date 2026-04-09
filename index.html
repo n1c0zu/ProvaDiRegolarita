@@ -149,10 +149,10 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    border-top: 1px solid var(--win-light);
-    border-left: 1px solid var(--win-light);
-    border-right: 1px solid var(--win-dark);
-    border-bottom: 1px solid var(--win-dark);
+    border-top: 2px solid var(--win-light);
+    border-left: 2px solid var(--win-light);
+    border-right: 2px solid var(--win-darker);
+    border-bottom: 2px solid var(--win-darker);
   }
   .tappa-num { font-size: 15px; color: var(--muted); min-width: 26px; }
   .tappa-name-input { flex: 1; min-width: 0; }
@@ -410,28 +410,15 @@
 
   /* ── RESULTS ── */
   #results-screen {
-    position: absolute; inset: 0;
+    display: none;
     background: var(--bg);
-    flex-direction: column;
-    overflow: hidden;
-    padding: 6px;
-    gap: 5px;
-    z-index: 10;
-  }
-  .results-window {
-    flex: 1 1 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    background: var(--win);
   }
   #results-inner {
     flex: 1 1 0;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 6px;
+    gap: 5px;
   }
   .res-row {
     background: var(--win);
@@ -439,10 +426,10 @@
     display: flex;
     flex-direction: column;
     gap: 3px;
-    border-top: 2px solid var(--win-darker);
-    border-left: 2px solid var(--win-darker);
-    border-right: 2px solid var(--win-light);
-    border-bottom: 2px solid var(--win-light);
+    border-top: 2px solid var(--win-light);
+    border-left: 2px solid var(--win-light);
+    border-right: 2px solid var(--win-darker);
+    border-bottom: 2px solid var(--win-darker);
   }
   .res-row-header { display: flex; align-items: center; justify-content: space-between; }
   .res-name { font-size: 16px; font-weight: bold; }
@@ -450,17 +437,20 @@
   .res-detail { display: flex; gap: 12px; font-size: 14px; color: var(--muted); font-family: 'Consolas', 'Lucida Console', monospace; }
   .res-summary {
     background: var(--win);
-    padding: 8px 10px;
+    padding: 10px 12px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
     flex-shrink: 0;
-    border-top: 2px solid var(--win-darker);
-    margin: 0 6px 6px;
+    border-top: 2px solid var(--win-light);
+    border-left: 2px solid var(--win-light);
+    border-right: 2px solid var(--win-darker);
+    border-bottom: 2px solid var(--win-darker);
+    margin: 0;
   }
   .res-summary-row { display: flex; justify-content: space-between; font-size: 16px; }
   .res-summary-row span:last-child { font-weight: bold; font-family: 'Consolas', 'Lucida Console', monospace; }
-  .results-footer { padding: 6px; flex-shrink: 0; }
+  .results-footer { padding: 0; }
 
   /* status bar */
   .statusbar {
@@ -534,14 +524,6 @@
   <div class="race-window win-window">
     <div class="win-titlebar">
       <div class="win-titlebar-left">[>] ASI Regolarita' - Gara in corso</div>
-      <span id="cur-progress" style="font-size:11px; font-weight:normal;"></span>
-    </div>
-
-    <div class="race-header">
-      <div class="race-header-left">
-        <span class="race-label">Tappa in corso</span>
-        <span class="race-tappa-name" id="cur-name">—</span>
-      </div>
     </div>
 
     <div class="timer-area" id="timer-area">
@@ -553,27 +535,28 @@
       <div class="tap-hint" id="tap-hint">[>] Tap per iniziare</div>
     </div>
 
-    <div id="results-screen" style="display:none;">
-      <div class="results-window win-window" style="flex:1 1 0; display:flex; flex-direction:column; overflow:hidden; margin:0;">
-        <div class="win-titlebar">[=] Risultati gara</div>
-        <div id="results-inner">
-          <div id="results-list"></div>
-        </div>
-        <div class="res-summary" id="results-summary"></div>
-      </div>
-      <div class="results-footer">
-        <button class="start-btn" onclick="goSetup()" style="width:100%;">[<] Nuova gara</button>
-      </div>
-    </div>
-
     <div class="tappa-strip" id="tappa-strip"></div>
 
     <div class="tap-zone">
       <button class="tap-btn" id="main-tap-btn">[>] Avvia tappa</button>
     </div>
 
-    <div class="statusbar">
-      <span class="statusbar-item" id="status-bar">Pronto</span>
+
+  </div>
+</div>
+
+<!-- RESULTS SCREEN — same structure as setup -->
+<div id="results-screen" style="align-items:center; justify-content:center; height:100vh; height:100dvh; padding:10px; background:var(--bg);">
+  <div class="setup-window win-window" style="display:flex; flex-direction:column;">
+    <div class="win-titlebar">[=] ASI Regolarita' - Risultati gara</div>
+    <div class="setup-body" style="padding:8px; gap:6px;">
+      <div id="results-inner" style="flex:1 1 0; overflow-y:auto; display:flex; flex-direction:column; gap:5px; padding:0;">
+        <div id="results-list" style="display:flex; flex-direction:column; gap:5px;"></div>
+      </div>
+      <div class="res-summary" id="results-summary" style="flex-shrink:0; margin-top:5px;"></div>
+    </div>
+    <div class="setup-footer">
+      <button class="start-btn" onclick="goSetup()">[<] Nuova gara</button>
     </div>
   </div>
 </div>
@@ -896,11 +879,8 @@ function loop() {
 }
 
 function updateHeader() {
-  const t = tappe[currentIdx];
-  document.getElementById('cur-name').textContent = t.name;
-  document.getElementById('cur-progress').textContent = (currentIdx + 1) + ' / ' + tappe.length;
   const sb = document.getElementById('status-bar');
-  if (sb) sb.textContent = 'Tappa ' + (currentIdx+1) + ' di ' + tappe.length + ' - ' + t.name;
+  if (sb) sb.textContent = '';
 }
 
 function setHint() {
@@ -1034,7 +1014,7 @@ function showFinish() {
     <div class="res-summary-row"><span>Tappe completate</span><span>${tapResults.length} / ${tappe.length}</span></div>
   `;
 
-  document.getElementById('results-screen').style.display = 'flex';
+  document.getElementById('race-screen').style.display = 'none'; document.getElementById('results-screen').style.display = 'flex';
 }
 
 function goSetup() {
